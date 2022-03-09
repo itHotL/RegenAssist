@@ -1,0 +1,22 @@
+main: com.gmail.artemis.the.gr8.regenassist.Main
+name: RegenAssist
+version: 1.0
+api-version: 1.18
+description: executes the Multiverse regen command for a specific world only
+author: Artemis_the_gr8
+depend: [Multiverse-Core]
+commands:
+  regen:
+    description: requests a regen for the specified world
+    permission: regenassist.regen
+    permission-message: §cYou do not have permission to execute this command!
+    usage: /<command> [worldname]
+  regenconfirm:
+    description: performs the actual regen for the specified world
+    permission: regenassist.regen
+    permission-message: §cYou do not have permission to execute this command!
+permissions:
+  regenassist.regen:
+    description: Allows regen commands
+    default: op
+

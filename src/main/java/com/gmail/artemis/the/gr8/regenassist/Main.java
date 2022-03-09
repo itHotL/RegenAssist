@@ -1,0 +1,122 @@
+package com.gmail.artemis.the.gr8.regenassist;
+
+import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main extends JavaPlugin {
+
+    private MVWorldManager worldManager;
+    private MultiverseHandler multiverseHandler;
+    private Fancifier fancy;
+    private ArrayList<String> worlds;
+
+
+    @Override
+    public void onEnable() {
+        //get an instance of the MVWorldManager from the Multiverse API
+        MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        worldManager = core.getMVWorldManager();
+
+        //get an instance of the Fancifier class to get fancy messages
+        fancy = new Fancifier();
+
+        //pass the MVWorldManager and Fancifier on to the MultiverseHandler class
+        multiverseHandler = new MultiverseHandler(worldManager, fancy);
+
+        //register the JoinListener
+        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+
+        //get the worldlist
+        //---> use config to get list
+        //---> get new list upon config reload
+        worlds = new ArrayList<>();
+        worlds.add("resourceworld");
+        worlds.add("resourceworld_nether");
+
+        getLogger().info("Enabled RegenAssist");
+    }
+
+    @Override
+    public void onDisable() {
+        getLogger().info("Disabled RegenAssist");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        //the main command
+        if(label.equalsIgnoreCase("regen")) {
+
+            //check if a worldname is included
+            if(args.length == 0) {
+                sender.sendMessage(fancy.missingName());
+                return true;
+            }
+
+            //check to see whether world name is a valid option for regen
+            //---> check config
+            else if(args.length > 0 && worlds.contains(args[0])) {
+
+                //---> ask for confirmation before continuing
+                //---> dispatch command from console to send message to player with tellraw clickable link
+                String confirmCommand = "tellraw "+sender.getName()+ fancy.confirm(args[0]);
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
+
+                //---> give player 15 seconds to click "confirm"
+                return true;
+            }
+        }
+
+        //hand it over to the multiverseHandler
+        if(label.equalsIgnoreCase("regenconfirm")) {
+            //multiverseHandler.mvRegen(sender, args[0]);
+            sender.sendMessage(ChatColor.GOLD+"Looks promising!");
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+
+        //show the names of worlds that can be regenerated
+        //add config to provide this list
+        if(label.equalsIgnoreCase("regen") && args.length == 1 && args[0].length() == 0) {
+            return worlds;
+        }
+
+        return null;
+    }
+
+
+
+    //Attempt to remove players from world
+    //Plan 1
+        //create method to remove offline Players from World
+        //get offline player list
+        //get list of offline players with location in resourceworld
+        //put them at world spawn and remove them from list (use hashmap?)
+    //Use logger to output which players have been relocated
+    //Send message in chat ("x, y and z have been relocated to spawn")
+
+    //Plan 2
+        //relocate everyone who logs in in a world after it has been reset
+        //Create file with timestamp for last reset of specific world
+        //on PlayerJoin: check whether last login time is before reset
+        //if yes, tp them to spawn and send them a message letting them know what happened
+
+    //Perform regen for specified world (only resourceworlds allowed)
+    //set doFireTick to false
+    //Send message in chat ("world has been regenerated!")
+
+
+}
