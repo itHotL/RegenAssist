@@ -15,7 +15,7 @@ public class Main extends JavaPlugin {
 
     private MVWorldManager worldManager;
     private MultiverseHandler multiverseHandler;
-    private Fancifier fancy;
+    private MessageHandler msg;
     private ArrayList<String> worlds;
 
 
@@ -26,10 +26,10 @@ public class Main extends JavaPlugin {
         worldManager = core.getMVWorldManager();
 
         //get an instance of the Fancifier class to get fancy messages
-        fancy = new Fancifier();
+        msg = new MessageHandler();
 
         //pass the MVWorldManager and Fancifier on to the MultiverseHandler class
-        multiverseHandler = new MultiverseHandler(worldManager, fancy);
+        multiverseHandler = new MultiverseHandler(worldManager, msg);
 
         //register the JoinListener
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
@@ -57,7 +57,7 @@ public class Main extends JavaPlugin {
 
             //check if a worldname is included
             if(args.length == 0) {
-                sender.sendMessage(fancy.missingName());
+                sender.sendMessage(msg.missingName());
                 return true;
             }
 
@@ -67,7 +67,7 @@ public class Main extends JavaPlugin {
 
                 //---> ask for confirmation before continuing
                 //---> dispatch command from console to send message to player with tellraw clickable link
-                String confirmCommand = "tellraw "+sender.getName()+ fancy.confirm(args[0]);
+                String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0]);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
 
                 //---> give player 15 seconds to click "confirm"

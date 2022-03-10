@@ -2,13 +2,13 @@ package com.gmail.artemis.the.gr8.regenassist;
 
 import org.bukkit.ChatColor;
 
-public class Fancifier {
+public class MessageHandler {
 
     public String missingName() {
         return ChatColor.RED+"Please specify a world";
     }
 
-    public String mainWorld() {
+    public String worldWarning() {
         return ChatColor.RED+"You cannot regenerate the main world!";
     }
 
