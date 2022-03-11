@@ -4,12 +4,14 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Main extends JavaPlugin {
 
@@ -67,7 +69,12 @@ public class Main extends JavaPlugin {
 
                 //---> ask for confirmation before continuing
                 //---> dispatch command from console to send message to player with tellraw clickable link
-                String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0]);
+                long time = Bukkit.getWorld(args[0]).getGameTime();
+
+
+                String uniqueRegenCmd = "/regenconfirm";
+                String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0], uniqueRegenCmd, time);
+
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
 
                 //---> give player 15 seconds to click "confirm"
@@ -77,7 +84,7 @@ public class Main extends JavaPlugin {
 
         //hand it over to the multiverseHandler
         if(label.equalsIgnoreCase("regenconfirm")) {
-            //multiverseHandler.mvRegen(sender, args[0]);
+            multiverseHandler.mvRegen(sender, args[0]);
             sender.sendMessage(ChatColor.GOLD+"Looks promising!");
             return true;
         }
@@ -90,12 +97,40 @@ public class Main extends JavaPlugin {
 
         //show the names of worlds that can be regenerated
         //add config to provide this list
-        if(label.equalsIgnoreCase("regen") && args.length == 1 && args[0].length() == 0) {
-            return worlds;
+        List<String> finalList = new ArrayList<>();
+        if(label.equalsIgnoreCase("regen")) {
+
+            if(args.length == 1) {
+                for (String world : worlds) {
+                    if(world.startsWith(args[0])) {
+                        finalList.add(world);
+                    }
+                }
+            }
+
+            if(args.length == 2) {
+                List<String> seedList = new ArrayList<>();
+                seedList.add("same-seed");
+                seedList.add("random-seed");
+                seedList.add("supply-seed:");
+
+                for (String seed : seedList) {
+                    if(seed.startsWith(args[1])) {
+                        finalList.add(seed);
+                    }
+                }
+            }
+
+            if(args.length == 3) {
+                finalList.add("reset-gamerules");
+            }
         }
 
-        return null;
+        return finalList;
     }
+
+
+
 
 
 
