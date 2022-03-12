@@ -17,7 +17,7 @@ public class MultiverseHandler {
 
         //if worldname = world, panic and cancel
         if(worldName.equalsIgnoreCase("world")) {
-            sender.sendMessage(msg.worldWarning());
+            sender.sendMessage(msg.mainWorldWarning());
             return true;
         }
 
