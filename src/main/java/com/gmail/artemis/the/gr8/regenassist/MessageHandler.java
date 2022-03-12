@@ -12,7 +12,15 @@ public class MessageHandler {
         return ChatColor.RED+"Please specify a world";
     }
 
-    public String worldWarning() {
+    public String missingSeed() {
+        return ChatColor.RED + "If you want to supply your own seed, you do have to... you know... actually supply your own seed";
+    }
+
+    public String wrongName() {
+        return ChatColor.RED + "This world is not listed as a world that can be regenerated. Double-check your spelling, and check if the world is listed in the config.";
+    }
+
+    public String mainWorldWarning() {
         return ChatColor.RED+"You cannot regenerate the main world!";
     }
 

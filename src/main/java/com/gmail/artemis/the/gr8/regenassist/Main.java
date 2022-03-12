@@ -63,22 +63,35 @@ public class Main extends JavaPlugin {
                 return true;
             }
 
-            //check to see whether world name is a valid option for regen
+            //check if seed was supplied if supply-seed was chosen
+            else if (args.length >= 2 && args[1].equalsIgnoreCase("supply-seed:")) {
+                sender.sendMessage(msg.missingSeed());
+                return false;
+            }
+
+            //check whether world name is a valid option for regen
             //---> check config
-            else if(args.length > 0 && worlds.contains(args[0])) {
+            else if (args.length > 0) {
 
-                //---> ask for confirmation before continuing
-                //---> dispatch command from console to send message to player with tellraw clickable link
-                long time = Bukkit.getWorld(args[0]).getGameTime();
+                if(!worlds.contains(args[0])) {
+                    sender.sendMessage(msg.wrongName());
+                    return true;
+                }
+
+                if(worlds.contains(args[0])) {
+                    //---> ask for confirmation before continuing
+                    //---> dispatch command from console to send message to player with tellraw clickable link
+                    long time = Bukkit.getWorld(args[0]).getGameTime();
 
 
-                String uniqueRegenCmd = "/regenconfirm";
-                String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0], uniqueRegenCmd, time);
+                    String uniqueRegenCmd = "/regenconfirm";
+                    String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0], uniqueRegenCmd, time);
 
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
 
-                //---> give player 15 seconds to click "confirm"
-                return true;
+                    //---> give player 15 seconds to click "confirm"
+                    return true;
+                }
             }
         }
 
