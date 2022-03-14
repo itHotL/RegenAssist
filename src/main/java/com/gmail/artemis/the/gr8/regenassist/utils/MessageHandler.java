@@ -1,4 +1,4 @@
-package com.gmail.artemis.the.gr8.regenassist;
+package com.gmail.artemis.the.gr8.regenassist.utils;
 
 import org.bukkit.ChatColor;
 

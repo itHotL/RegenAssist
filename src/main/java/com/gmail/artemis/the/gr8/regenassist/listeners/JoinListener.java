@@ -1,4 +1,4 @@
-package com.gmail.artemis.the.gr8.regenassist;
+package com.gmail.artemis.the.gr8.regenassist.listeners;
 
 import org.bukkit.event.Listener;
 
