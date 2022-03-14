@@ -4,14 +4,12 @@ import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class Main extends JavaPlugin {
 
@@ -19,12 +17,17 @@ public class Main extends JavaPlugin {
     private MultiverseHandler multiverseHandler;
     private MessageHandler msg;
     private ArrayList<String> worlds;
+    private HashMap<UUID, String> worldCodes = new HashMap<UUID, String>();
 
 
     @Override
     public void onEnable() {
         //get an instance of the MVWorldManager from the Multiverse API
         MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        if(core == null) {
+            getLogger().severe("Multiverse-Core not found, RegenAssist cannot live without it </3");
+            return;
+        }
         worldManager = core.getMVWorldManager();
 
         //get an instance of the Fancifier class to get fancy messages
@@ -63,6 +66,12 @@ public class Main extends JavaPlugin {
                 return true;
             }
 
+            //check if option for seed was chosen
+            else if (args.length == 1) {
+                sender.sendMessage(msg.missingSeedOption());
+                return false;
+            }
+
             //check if seed was supplied if supply-seed was chosen
             else if (args.length >= 2 && args[1].equalsIgnoreCase("supply-seed:")) {
                 sender.sendMessage(msg.missingSeed());
@@ -71,7 +80,7 @@ public class Main extends JavaPlugin {
 
             //check whether world name is a valid option for regen
             //---> check config
-            else if (args.length > 0) {
+            else {
 
                 if(!worlds.contains(args[0])) {
                     sender.sendMessage(msg.wrongName());
@@ -79,31 +88,74 @@ public class Main extends JavaPlugin {
                 }
 
                 if(worlds.contains(args[0])) {
-                    //---> ask for confirmation before continuing
-                    //---> dispatch command from console to send message to player with tellraw clickable link
                     long time = Bukkit.getWorld(args[0]).getGameTime();
 
+                    //put unique confirm-code on HashMap attached to the worldName (if there is no entry for this name yet)
+                    if(worldCodes.containsValue(args[0])) {
+                        sender.sendMessage(msg.alreadyRegenerating());
+                    }
 
-                    String uniqueRegenCmd = "/regenconfirm";
-                    String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0], uniqueRegenCmd, time);
+                    else {
+                        UUID uniqueCode = UUID.randomUUID();
+                        worldCodes.put(uniqueCode, args[0]);
 
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
+                        //start 15 second timer that removes unique code from the HashMap if it is still there
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+                            @Override
+                            public void run() {
+                                if(worldCodes.containsKey(uniqueCode)) {
+                                    worldCodes.remove(uniqueCode);
+                                }
+                            }
+                        }, 300L);
 
-                    //---> give player 15 seconds to click "confirm"
+                        //give confirm prompt to player
+                        String gamerules = (args.length == 3) ? args[2] : " ";
+                        String uniqueRegenCmd = "/regenconfirm "+uniqueCode+" "+args[1]+" "+gamerules;
+                        String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0], uniqueRegenCmd, time);
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
+                    }
+
                     return true;
                 }
             }
         }
 
-        //hand it over to the multiverseHandler
+        //if player clicks confirm within 15 seconds, get worldName from HashMap and pass it on to the MultiverseHandler
         if(label.equalsIgnoreCase("regenconfirm")) {
-            multiverseHandler.mvRegen(sender, args[0]);
-            sender.sendMessage(ChatColor.GOLD+"Looks promising!");
+
+            //args[0] = uniqueCode
+            //args[1] = same-seed/random-seed/supply-seed:
+            //args[2] = optional reset-gamerules
+            if (args.length >= 2 && worldCodes.containsKey(UUID.fromString(args[0]))) {
+
+                String worldName = worldCodes.remove(UUID.fromString(args[0]));
+                boolean useNewSeed = (args[1].equalsIgnoreCase("random-seed") || args[1].startsWith("supply-seed:"));
+                boolean randomSeed = (args[1].equalsIgnoreCase("random-seed"));
+                String seed = args[1].startsWith("supply-seed:") ? args[1].substring(12) : "";
+                boolean keepGameRules = !(args.length == 3 && args[2].equalsIgnoreCase("reset-gamerules"));
+
+                //start the regen
+                sender.sendMessage(msg.startRegenerating(worldName));
+                multiverseHandler.mvRegen(sender, worldName, useNewSeed, randomSeed, seed, keepGameRules);
+
+                //check every second if the world has been loaded again after regenerating, and stop + give feedback when the world has been loaded
+                new BukkitRunnable() {
+                    public void run() {
+                        if (!worldManager.getUnloadedWorlds().contains(worldName)) {
+                            sender.sendMessage(msg.doneRegenerating(worldName));
+                            this.cancel();
+                        }
+                    }
+                }.runTaskTimer(this, 20L, 20L);
+            }
+
             return true;
         }
 
         return false;
     }
+
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {

@@ -13,7 +13,7 @@ public class MultiverseHandler {
         msg = f;
     }
 
-    public boolean mvRegen(CommandSender sender, String worldName) {
+    public boolean mvRegen(CommandSender sender, String worldName, boolean useNewSeed, boolean randomSeed, String seed, boolean keepGameRules) {
 
         //if worldname = world, panic and cancel
         if(worldName.equalsIgnoreCase("world")) {
@@ -23,16 +23,17 @@ public class MultiverseHandler {
 
         //otherwise, perform the reset
         else {
-            boolean useNewSeed = true;
-            boolean keepGameRules = true;
-
-            //randomseed = false when seed is provided, true if seed is not provided
-            boolean randomSeed = false;
-            String seed = "420";
+        /*  System.out.println("worldname: "+worldName);
+            System.out.println("useNewSeed: "+useNewSeed);
+            System.out.println("randomSeed: "+randomSeed);
+            System.out.println("seed: "+seed);
+            System.out.println("keepGameRules: "+keepGameRules);  */
 
             return worldManager.regenWorld(worldName, useNewSeed, randomSeed, seed, keepGameRules);
         }
     }
+
+
 
 
 }
