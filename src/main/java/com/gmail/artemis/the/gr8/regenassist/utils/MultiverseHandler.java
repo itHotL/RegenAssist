@@ -8,9 +8,9 @@ import java.util.List;
 public class MultiverseHandler {
 
     private MVWorldManager worldManager;
-    private MessageHandler msg;
+    private MessageWriter msg;
 
-    public MultiverseHandler (MVWorldManager wm, MessageHandler f) {
+    public MultiverseHandler (MVWorldManager wm, MessageWriter f) {
         worldManager = wm;
         msg = f;
     }

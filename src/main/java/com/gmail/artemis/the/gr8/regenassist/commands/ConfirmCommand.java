@@ -1,7 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.utils.MessageHandler;
+import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import com.gmail.artemis.the.gr8.regenassist.utils.MultiverseHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.Utilities;
 import org.bukkit.command.Command;
@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public class ConfirmCommand implements CommandExecutor {
 
-    private MessageHandler msg;
+    private MessageWriter msg;
     private Utilities utils;
     private MultiverseHandler mv;
     private final Main plugin;
 
-    public ConfirmCommand (MessageHandler f, Utilities u, MultiverseHandler m, Main p) {
+    public ConfirmCommand (MessageWriter f, Utilities u, MultiverseHandler m, Main p) {
         msg = f;
         mv = m;
         utils = u;

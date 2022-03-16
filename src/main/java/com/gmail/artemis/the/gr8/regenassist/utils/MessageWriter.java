@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class MessageHandler {
+public class MessageWriter {
 
     public String alreadyRegenerating() {
         return ChatColor.GOLD+"Someone else is already in the process of regenerating this world, please try again later";

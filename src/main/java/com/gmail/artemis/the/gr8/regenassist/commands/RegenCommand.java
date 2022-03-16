@@ -1,7 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.utils.MessageHandler;
+import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import com.gmail.artemis.the.gr8.regenassist.utils.Utilities;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,11 +12,11 @@ import java.util.UUID;
 
 public class RegenCommand implements CommandExecutor {
 
-    private MessageHandler msg;
+    private MessageWriter msg;
     private Utilities utils;
     private final Main plugin;
 
-    public RegenCommand (MessageHandler f, Utilities u, Main p) {
+    public RegenCommand (MessageWriter f, Utilities u, Main p) {
         msg = f;
         plugin = p;
         utils = u;

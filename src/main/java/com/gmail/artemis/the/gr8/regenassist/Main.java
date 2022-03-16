@@ -4,27 +4,23 @@ import com.gmail.artemis.the.gr8.regenassist.commands.ConfirmCommand;
 import com.gmail.artemis.the.gr8.regenassist.commands.RegenCommand;
 import com.gmail.artemis.the.gr8.regenassist.commands.TabCompleter;
 import com.gmail.artemis.the.gr8.regenassist.listeners.JoinListener;
-import com.gmail.artemis.the.gr8.regenassist.utils.MessageHandler;
+import com.gmail.artemis.the.gr8.regenassist.utils.FileHandler;
+import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import com.gmail.artemis.the.gr8.regenassist.utils.MultiverseHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.Utilities;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.io.IOException;
 
 public class Main extends JavaPlugin {
 
     private MVWorldManager worldManager;
     private MultiverseHandler mvHandler;
-    private MessageHandler msg;
+    private MessageWriter msg;
+    private FileHandler fw;
     private Utilities utils;
-    private File regenDataFile;
-    private FileConfiguration regenData;
+
 
 
     @Override
@@ -37,17 +33,17 @@ public class Main extends JavaPlugin {
         }
         worldManager = core.getMVWorldManager();
 
-        //get an instance of the MessageHandler and Utilities class
-        msg = new MessageHandler();
+        //get an instance of the MessageWriter, FileHandler and Utilities class
+        msg = new MessageWriter();
         utils = new Utilities();
+        fw = new FileHandler(this);
 
-        //pass the MVWorldManager and MessageHandler on to the MultiverseHandler class
+        //pass the MVWorldManager and MessageWriter on to the MultiverseHandler class
         mvHandler = new MultiverseHandler(worldManager, msg);
 
-        //create a general config file if none exists yet
-        //create a file to write world- and player-data to if none exists yet
+        //create a general config and data storage file if none exist yet, and load them
         this.saveDefaultConfig();
-        createRegenDataFile();
+        fw.writeToFile();
 
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(msg, utils, this));
@@ -65,19 +61,7 @@ public class Main extends JavaPlugin {
         getLogger().info("Disabled RegenAssist");
     }
 
-    private void createRegenDataFile() {
-        regenDataFile = new File(getDataFolder(), "regenData.yml");
-        if (!regenDataFile.exists()) {
-            regenDataFile.getParentFile().mkdirs();
-            try {
-                regenDataFile.createNewFile();
-            }
-            catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-        regenData = YamlConfiguration.loadConfiguration(regenDataFile);
-    }
+
 
 
 
