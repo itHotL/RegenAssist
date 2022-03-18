@@ -1,9 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
-import com.gmail.artemis.the.gr8.regenassist.utils.MultiverseHandler;
-import com.gmail.artemis.the.gr8.regenassist.utils.Utilities;
+import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,15 +11,15 @@ import java.util.UUID;
 
 public class ConfirmCommand implements CommandExecutor {
 
-    private MessageWriter msg;
     private Utilities utils;
     private MultiverseHandler mv;
+    private DataFileHandler data;
     private final Main plugin;
 
-    public ConfirmCommand (MessageWriter f, Utilities u, MultiverseHandler m, Main p) {
-        msg = f;
-        mv = m;
+    public ConfirmCommand (Utilities u, MultiverseHandler m, DataFileHandler d, Main p) {
         utils = u;
+        mv = m;
+        data = d;
         plugin = p;
     }
 
@@ -43,14 +41,15 @@ public class ConfirmCommand implements CommandExecutor {
                 boolean keepGameRules = !(args.length == 3 && args[2].equalsIgnoreCase("reset-gamerules"));
 
                 //start the regen
-                sender.sendMessage(msg.startRegenerating(worldName));
+                sender.sendMessage(MessageWriter.startRegenerating(worldName));
                 mv.mvRegen(sender, worldName, useNewSeed, randomSeed, seed, keepGameRules);
 
                 //check every second if the world has been loaded again after regenerating, and stop + give feedback when the world has been loaded
                 new BukkitRunnable() {
                     public void run() {
                         if (!mv.getUnloadedWorlds().contains(worldName)) {
-                            sender.sendMessage(msg.doneRegenerating(worldName));
+                            data.writeToDataFile(worldName, TimeHandler.getCurrentDateTime());
+                            sender.sendMessage(MessageWriter.doneRegenerating(worldName));
                             this.cancel();
                         }
                     }

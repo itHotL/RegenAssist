@@ -1,8 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
-import com.gmail.artemis.the.gr8.regenassist.utils.Utilities;
+import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,14 +11,16 @@ import java.util.UUID;
 
 public class RegenCommand implements CommandExecutor {
 
-    private MessageWriter msg;
     private Utilities utils;
+    private ConfigHandler conf;
+    private DataFileHandler data;
     private final Main plugin;
 
-    public RegenCommand (MessageWriter f, Utilities u, Main p) {
-        msg = f;
-        plugin = p;
+    public RegenCommand (Utilities u, ConfigHandler c, DataFileHandler d, Main p) {
         utils = u;
+        conf = c;
+        data = d;
+        plugin = p;
     }
 
     @Override
@@ -30,37 +31,35 @@ public class RegenCommand implements CommandExecutor {
 
             //check if a worldname is included
             if(args.length == 0) {
-                sender.sendMessage(msg.missingName());
+                sender.sendMessage(MessageWriter.missingName());
                 return true;
             }
 
             //check if option for seed was chosen
             else if (args.length == 1) {
-                sender.sendMessage(msg.missingSeedOption());
+                sender.sendMessage(MessageWriter.missingSeedOption());
                 return false;
             }
 
             //check if seed was supplied if supply-seed was chosen
             else if (args.length >= 2 && args[1].equalsIgnoreCase("supply-seed:")) {
-                sender.sendMessage(msg.missingSeed());
+                sender.sendMessage(MessageWriter.missingSeed());
                 return false;
             }
 
-            //check whether world name is a valid option for regen
-            //---> check config
+            //check config to see whether world name is a valid option for regen
             else {
 
-                if(!utils.getWorldList().contains(args[0])) {
-                    sender.sendMessage(msg.wrongName());
+                if(!conf.getWorldList().contains(args[0])) {
+                    sender.sendMessage(MessageWriter.wrongName());
                     return true;
                 }
 
-                if(utils.getWorldList().contains(args[0])) {
-                    long time = Bukkit.getWorld(args[0]).getGameTime();
+                else if(conf.getWorldList().contains(args[0])) {
 
                     //put unique confirm-code on HashMap attached to the worldName (if there is no entry for this name yet)
                     if(utils.getWorldCodes().containsValue(args[0])) {
-                        sender.sendMessage(msg.alreadyRegenerating());
+                        sender.sendMessage(MessageWriter.alreadyRegenerating());
                     }
 
                     else {
@@ -78,9 +77,11 @@ public class RegenCommand implements CommandExecutor {
                         }, 300L);
 
                         //give confirm prompt to player
+                        //args[0] = uniqueCode
+                        //args[1] = same-seed/random-seed/supply-seed:
+                        //args[2] = optional reset-gamerules
                         String gamerules = (args.length == 3) ? args[2] : " ";
-                        String uniqueRegenCmd = "/regenconfirm "+uniqueCode+" "+args[1]+" "+gamerules;
-                        String confirmCommand = "tellraw "+sender.getName()+ msg.confirm(args[0], uniqueRegenCmd, time);
+                        String confirmCommand = "tellraw "+sender.getName()+ MessageWriter.confirm(args[0], getUniqueRegenCmd(uniqueCode, args[1], gamerules), getTimeSinceLastRegen(args[0]));
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
                     }
 
@@ -90,5 +91,25 @@ public class RegenCommand implements CommandExecutor {
         }
 
         return false;
+    }
+
+
+    private String getUniqueRegenCmd(UUID uuid, String seedOption, String gamerules) {
+        String uniqueRegenCmd = "/regenconfirm "+uuid+" "+seedOption+" "+gamerules;
+        return uniqueRegenCmd;
+    }
+
+    //calculate the time since this world has last been reset
+    private String getTimeSinceLastRegen(String worldName) {
+        String time = data.getLastRegenTime(worldName);
+        if (!time.equalsIgnoreCase("")) {
+            long diff = TimeHandler.getTimeDifference(time);
+            String finalTime = diff+" Minutes";
+            return finalTime;
+        }
+
+        else {
+            return time;
+        }
     }
 }
