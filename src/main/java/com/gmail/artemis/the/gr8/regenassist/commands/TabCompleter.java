@@ -1,7 +1,6 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
-import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.utils.MessageHandler;
+import com.gmail.artemis.the.gr8.regenassist.utils.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.Utilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -12,9 +11,11 @@ import java.util.List;
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
     private Utilities utils;
+    private ConfigHandler conf;
 
-    public TabCompleter (Utilities u) {
+    public TabCompleter (Utilities u, ConfigHandler c) {
         utils = u;
+        conf = c;
     }
 
     @Override
@@ -25,7 +26,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         if(label.equalsIgnoreCase("regen")) {
 
             if(args.length == 1) {
-                for (String world : utils.getWorldList()) {
+                for (String world : conf.getWorldList()) {
                     if(world.startsWith(args[0])) {
                         finalList.add(world);
                     }

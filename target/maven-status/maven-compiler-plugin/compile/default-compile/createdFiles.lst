@@ -1,10 +1,13 @@
-com\gmail\artemis\the\gr8\regenassist\utils\Utilities.class
+com\gmail\artemis\the\gr8\regenassist\utils\TimeHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\JoinListener.class
 com\gmail\artemis\the\gr8\regenassist\commands\RegenCommand$1.class
+com\gmail\artemis\the\gr8\regenassist\utils\DataFileHandler.class
+com\gmail\artemis\the\gr8\regenassist\utils\MessageWriter.class
+com\gmail\artemis\the\gr8\regenassist\utils\ConfigHandler.class
+com\gmail\artemis\the\gr8\regenassist\utils\Utilities.class
 com\gmail\artemis\the\gr8\regenassist\commands\ConfirmCommand.class
 com\gmail\artemis\the\gr8\regenassist\commands\TabCompleter.class
 com\gmail\artemis\the\gr8\regenassist\commands\ConfirmCommand$1.class
 com\gmail\artemis\the\gr8\regenassist\commands\RegenCommand.class
 com\gmail\artemis\the\gr8\regenassist\utils\MultiverseHandler.class
 com\gmail\artemis\the\gr8\regenassist\Main.class
-com\gmail\artemis\the\gr8\regenassist\utils\MessageHandler.class
