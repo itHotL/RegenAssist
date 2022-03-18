@@ -95,8 +95,7 @@ public class RegenCommand implements CommandExecutor {
 
 
     private String getUniqueRegenCmd(UUID uuid, String seedOption, String gamerules) {
-        String uniqueRegenCmd = "/regenconfirm "+uuid+" "+seedOption+" "+gamerules;
-        return uniqueRegenCmd;
+        return "/regenconfirm "+uuid+" "+seedOption+" "+gamerules;
     }
 
     //calculate the time since this world has last been reset
@@ -104,8 +103,7 @@ public class RegenCommand implements CommandExecutor {
         String time = data.getLastRegenTime(worldName);
         if (!time.equalsIgnoreCase("")) {
             long diff = TimeHandler.getTimeDifference(time);
-            String finalTime = diff+" Minutes";
-            return finalTime;
+            return diff+" Minutes";
         }
 
         else {
