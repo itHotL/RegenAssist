@@ -42,23 +42,26 @@ public class ConfirmCommand implements CommandExecutor {
 
                 //start the regen
                 sender.sendMessage(MessageWriter.startRegenerating(worldName));
-                mv.mvRegen(sender, worldName, useNewSeed, randomSeed, seed, keepGameRules);
+                boolean regen = mv.mvRegen(sender, worldName, useNewSeed, randomSeed, seed, keepGameRules);
+                if (!regen) {
+                    return false;
+                }
 
-                //check every second if the world has been loaded again after regenerating, and stop + give feedback when the world has been loaded
-                new BukkitRunnable() {
-                    public void run() {
-                        if (!mv.getUnloadedWorlds().contains(worldName)) {
-                            data.writeToDataFile(worldName, TimeHandler.getCurrentDateTime());
-                            sender.sendMessage(MessageWriter.doneRegenerating(worldName));
-                            this.cancel();
+                else {
+                    //check every second if the world has been loaded again after regenerating, and stop + give feedback when the world has been loaded
+                    new BukkitRunnable() {
+                        public void run() {
+                            if (!mv.getUnloadedWorlds().contains(worldName)) {
+                                data.writeToDataFile(worldName, TimeHandler.getCurrentDateTime());
+                                sender.sendMessage(MessageWriter.doneRegenerating(worldName));
+                                this.cancel();
+                            }
                         }
-                    }
-                }.runTaskTimer(plugin, 20L, 20L);
+                    }.runTaskTimer(plugin, 20L, 20L);
+                    return true;
+                }
             }
-
-            return true;
         }
-
         return false;
     }
 }

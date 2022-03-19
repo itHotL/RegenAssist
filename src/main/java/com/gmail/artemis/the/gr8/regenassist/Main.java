@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
 
     private MVWorldManager worldManager;
-    private MultiverseHandler mvHandler;
+    private MultiverseHandler mv;
     private DataFileHandler data;
     private ConfigHandler conf;
     private Utilities utils;
@@ -36,7 +36,7 @@ public class Main extends JavaPlugin {
         conf = new ConfigHandler(this);
 
         //pass the MVWorldManager and MessageWriter on to the MultiverseHandler class
-        mvHandler = new MultiverseHandler(worldManager);
+        mv = new MultiverseHandler(worldManager);
 
         //create a general config and data storage file if none exist yet, and load them
         conf.saveDefaultConfig();
@@ -45,9 +45,9 @@ public class Main extends JavaPlugin {
         getLogger().info("Worldlist: "+conf.getWorldList());
 
         //set command executors and pass the relevant instances on
-        this.getCommand("regen").setExecutor(new RegenCommand(utils, conf, data,this));
+        this.getCommand("regen").setExecutor(new RegenCommand(utils, conf, data, mv,this));
         this.getCommand("regen").setTabCompleter(new TabCompleter(utils, conf));
-        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(utils, mvHandler, data, this));
+        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(utils, mv, data, this));
 
         //register the JoinListener
         Bukkit.getPluginManager().registerEvents(new JoinListener(), this);

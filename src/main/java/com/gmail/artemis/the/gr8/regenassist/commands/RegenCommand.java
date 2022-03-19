@@ -14,12 +14,14 @@ public class RegenCommand implements CommandExecutor {
     private Utilities utils;
     private ConfigHandler conf;
     private DataFileHandler data;
+    private MultiverseHandler mv;
     private final Main plugin;
 
-    public RegenCommand (Utilities u, ConfigHandler c, DataFileHandler d, Main p) {
+    public RegenCommand (Utilities u, ConfigHandler c, DataFileHandler d, MultiverseHandler m, Main p) {
         utils = u;
         conf = c;
         data = d;
+        mv = m;
         plugin = p;
     }
 
@@ -32,7 +34,7 @@ public class RegenCommand implements CommandExecutor {
             //check if a worldname is included
             if(args.length == 0) {
                 sender.sendMessage(MessageWriter.missingName());
-                return true;
+                return false;
             }
 
             //check if option for seed was chosen
@@ -55,11 +57,17 @@ public class RegenCommand implements CommandExecutor {
                     return true;
                 }
 
-                else if(conf.getWorldList().contains(args[0])) {
+                else {
+
+                    if(!mv.isMVWorld(args[0])) {
+                        sender.sendMessage(MessageWriter.unknownWorld());
+                        return true;
+                    }
 
                     //put unique confirm-code on HashMap attached to the worldName (if there is no entry for this name yet)
-                    if(utils.getWorldCodes().containsValue(args[0])) {
+                    else if(utils.getWorldCodes().containsValue(args[0])) {
                         sender.sendMessage(MessageWriter.alreadyRegenerating());
+                        return true;
                     }
 
                     else {
@@ -83,13 +91,11 @@ public class RegenCommand implements CommandExecutor {
                         String gamerules = (args.length == 3) ? args[2] : " ";
                         String confirmCommand = "tellraw "+sender.getName()+ MessageWriter.confirm(args[0], getUniqueRegenCmd(uniqueCode, args[1], gamerules), getTimeSinceLastRegen(args[0]));
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
+                        return true;
                     }
-
-                    return true;
                 }
             }
         }
-
         return false;
     }
 

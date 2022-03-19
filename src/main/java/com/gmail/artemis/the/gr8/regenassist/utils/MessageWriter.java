@@ -10,7 +10,7 @@ public final class MessageWriter {
     }
 
     public static String alreadyRegenerating() {
-        return ChatColor.GOLD+"Someone else is already in the process of regenerating this world, please try again later";
+        return ChatColor.GOLD+"Someone else is already in the process of regenerating this world, please check again later!";
     }
 
     public static String mainWorldWarning() {
@@ -26,11 +26,11 @@ public final class MessageWriter {
     }
 
     public static String missingSeedOption () {
-        return ChatColor.RED + "Please choose an option for the seed";
+        return ChatColor.RED + "Please include an option for the seed";
     }
 
     public static String startRegenerating(String worldName) {
-        return ChatColor.GOLD + "Starting the regeneration of the " + ChatColor.AQUA + worldName + ChatColor.GOLD + "...";
+        return ChatColor.GREEN + "Starting the regeneration of the " + ChatColor.AQUA + worldName + ChatColor.GREEN + "...";
     }
 
     public static String doneRegenerating(String worldName) {
@@ -38,7 +38,11 @@ public final class MessageWriter {
     }
 
     public static String wrongName() {
-        return ChatColor.RED + "This world is not listed as a world that can be regenerated. Double-check your spelling, and check if the world is listed in the config.";
+        return ChatColor.RED + "This world is not listed as a world that can be regenerated.";
+    }
+
+    public static String unknownWorld() {
+        return ChatColor.GOLD + "Unable to regen a world that does not exist!";
     }
 
 
