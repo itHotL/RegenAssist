@@ -45,8 +45,8 @@ public final class MessageWriter {
     public static String confirm(String worldName, String uniqueRegenCmd, String timeSinceRegen) {
 
         String time = (timeSinceRegen.equalsIgnoreCase("")) ? "" : "{\"text\":\". This world was last regenerated \",\"color\":\"white\"}," +
-                                                    "{\"text\":\"["+timeSinceRegen+"]\",\"color\":\"gold\"}," +
-                                                    "{\"text\":\" ago\",\"color\":\"white\"},";
+                                                                                "{\"text\":\"["+timeSinceRegen+"]\",\"color\":\"gold\"}," +
+                                                                                  "{\"text\":\" ago\",\"color\":\"white\"},";
 
         return " [\"\",{\"text\":\"[\",\"color\":\"gray\"}," +
                 "{\"text\":\"RegenAssist\",\"color\":\"gold\"}," +

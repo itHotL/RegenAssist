@@ -21,7 +21,16 @@ public class DataFileHandler {
     }
 
     public String getLastRegenTime(String worldName) {
-        String lastRegenTime = (data.contains(worldName)) ? data.getString(worldName) : "";
+        String lastRegenTime;
+
+        try {
+            lastRegenTime = (data.contains(worldName)) ? data.getString(worldName) : "";
+        }
+        catch (Exception e){
+            lastRegenTime = "";
+            e.printStackTrace();
+        }
+
         return lastRegenTime;
     }
 
@@ -64,8 +73,8 @@ public class DataFileHandler {
         try {
             dataFile.createNewFile();
         }
-        catch (IOException ex) {
-            ex.printStackTrace();
+        catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
