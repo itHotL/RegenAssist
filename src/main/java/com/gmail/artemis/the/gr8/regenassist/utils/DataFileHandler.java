@@ -21,17 +21,7 @@ public class DataFileHandler {
     }
 
     public String getLastRegenTime(String worldName) {
-        String lastRegenTime;
-
-        try {
-            lastRegenTime = (data.contains(worldName)) ? data.getString(worldName) : "";
-        }
-        catch (Exception e){
-            lastRegenTime = "";
-            e.printStackTrace();
-        }
-
-        return lastRegenTime;
+        return (data.contains(worldName)) ? data.getString(worldName) : "";
     }
 
     //store values in the regen-data file (param: path, object to store)
