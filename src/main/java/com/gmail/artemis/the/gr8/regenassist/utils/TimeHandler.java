@@ -17,24 +17,29 @@ public final class TimeHandler {
     }
 
     public static String getStringTimeDifference(String regenTime) {
-        long mins = getTimeDifference(regenTime);
+        long seconds = getTimeDifference(regenTime);
 
-        if (mins>=1440) {
-            long days = Math.round(mins/60/24);
-            return (days==1) ? (days + " day") : (days + " days");
+        if (seconds>=86400) {
+            int days = Math.round(seconds/60/60/24);
+            return (days ==1) ? (days + " day") : (days + " days");
         }
 
-        else if (mins>=60) {
-            long hours = Math.round(mins/60);
+        else if (seconds>=3600) {
+            int hours = Math.round(seconds/60/60);
             return (hours==1) ? (hours + " hour") : (hours + " hours");
         }
 
-        else if (mins==0) {
+        else if (seconds>=60) {
+            int minutes = Math.round(seconds/60);
+            return (minutes==1) ? (minutes + " minute") : (minutes + " minutes");
+        }
+
+        else if (seconds==0) {
             return "";
         }
 
         else {
-            return (mins==1) ? (mins + " minute") : (mins + " minutes");
+            return (seconds==1) ? (seconds + " second") : (seconds + " seconds");
         }
     }
 
@@ -43,7 +48,7 @@ public final class TimeHandler {
 
         try {
             LocalDateTime regen = LocalDateTime.parse(regenDateTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            return regen.until(now, ChronoUnit.MINUTES);
+            return regen.until(now, ChronoUnit.SECONDS);
 
         } catch (Exception e) {
             e.printStackTrace();

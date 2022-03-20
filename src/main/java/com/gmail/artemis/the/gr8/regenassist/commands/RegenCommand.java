@@ -106,13 +106,13 @@ public class RegenCommand implements CommandExecutor {
 
     //calculate the time since this world has last been reset
     private String getTimeSinceLastRegen(String worldName) {
-        String time = data.getLastRegenTime(worldName);
-        if (!time.equalsIgnoreCase("")) {
-            return TimeHandler.getStringTimeDifference(time);
+        String timestamp = data.getLastRegenTime(worldName);
+        if (!timestamp.equalsIgnoreCase("")) {
+            return TimeHandler.getStringTimeDifference(timestamp);
         }
 
         else {
-            return time;
+            return timestamp;
         }
     }
 }
