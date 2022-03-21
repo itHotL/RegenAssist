@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public class ConfirmCommand implements CommandExecutor {
 
-    private Utilities utils;
-    private MultiverseHandler mv;
-    private DataFileHandler data;
+    private final Utilities utils;
+    private final MultiverseHandler mv;
+    private final DataFileHandler data;
     private final Main plugin;
 
     public ConfirmCommand (Utilities u, MultiverseHandler m, DataFileHandler d, Main p) {

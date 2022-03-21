@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public class RegenCommand implements CommandExecutor {
 
-    private Utilities utils;
-    private ConfigHandler conf;
-    private DataFileHandler data;
-    private MultiverseHandler mv;
+    private final Utilities utils;
+    private final ConfigHandler conf;
+    private final DataFileHandler data;
+    private final MultiverseHandler mv;
     private final Main plugin;
 
     public RegenCommand (Utilities u, ConfigHandler c, DataFileHandler d, MultiverseHandler m, Main p) {

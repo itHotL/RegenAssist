@@ -1,7 +1,6 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.utils.ConfigHandler;
-import com.gmail.artemis.the.gr8.regenassist.utils.Utilities;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -10,11 +9,9 @@ import java.util.List;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
-    private Utilities utils;
-    private ConfigHandler conf;
+    private final ConfigHandler conf;
 
-    public TabCompleter (Utilities u, ConfigHandler c) {
-        utils = u;
+    public TabCompleter (ConfigHandler c) {
         conf = c;
     }
 

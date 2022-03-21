@@ -46,11 +46,11 @@ public class Main extends JavaPlugin {
 
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(utils, conf, data, mv,this));
-        this.getCommand("regen").setTabCompleter(new TabCompleter(utils, conf));
+        this.getCommand("regen").setTabCompleter(new TabCompleter(conf));
         this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(utils, mv, data, this));
 
         //register the JoinListener
-        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(data, this), this);
 
         getLogger().info("Enabled RegenAssist");
     }
