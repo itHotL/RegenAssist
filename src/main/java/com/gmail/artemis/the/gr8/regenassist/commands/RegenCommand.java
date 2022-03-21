@@ -44,7 +44,7 @@ public class RegenCommand implements CommandExecutor {
             }
 
             //check if seed was supplied if supply-seed was chosen
-            else if (args.length >= 2 && args[1].equalsIgnoreCase("supply-seed:")) {
+            else if (args[1].equalsIgnoreCase("supply-seed:")) {
                 sender.sendMessage(MessageWriter.missingSeed());
                 return false;
             }
