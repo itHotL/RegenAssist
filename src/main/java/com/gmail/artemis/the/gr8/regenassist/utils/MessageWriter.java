@@ -34,11 +34,11 @@ public final class MessageWriter {
     }
 
     public static String startRegenerating(String worldName) {
-        return ChatColor.GREEN + "Starting the regeneration of the " + ChatColor.DARK_GREEN + worldName + ChatColor.GREEN + "...";
+        return ChatColor.GREEN + "Starting the regeneration of the " + ChatColor.AQUA + worldName + ChatColor.GREEN + "...";
     }
 
     public static String doneRegenerating(String worldName) {
-        return ChatColor.GREEN + "The " + ChatColor.AQUA + worldName + ChatColor.DARK_GREEN + " has been successfully regenerated!";
+        return ChatColor.GREEN + "The " + ChatColor.AQUA + worldName + ChatColor.AQUA + " has been successfully regenerated!";
     }
 
     public static String wrongName() {
