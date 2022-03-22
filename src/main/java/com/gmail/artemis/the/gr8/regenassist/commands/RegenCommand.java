@@ -89,8 +89,8 @@ public class RegenCommand implements CommandExecutor {
                         //args[1] = same-seed/random-seed/supply-seed:
                         //args[2] = optional reset-gamerules
                         String gamerules = (args.length == 3) ? args[2] : " ";
-                        String confirmCommand = "tellraw "+sender.getName()+ MessageWriter.confirm(args[0], getUniqueRegenCmd(uniqueCode, args[1], gamerules), getTimeSinceLastRegen(args[0]));
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCommand);
+                        String confirmCmd = "tellraw "+sender.getName()+ MessageWriter.confirmCommand(args[0], getUniqueRegenCmd(uniqueCode, args[1], gamerules), getTimeSinceLastRegen(args[0]));
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCmd);
                         return true;
                     }
                 }

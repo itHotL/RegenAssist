@@ -42,8 +42,6 @@ public class Main extends JavaPlugin {
         conf.saveDefaultConfig();
         data.loadDataFile();
 
-        getLogger().info("Worldlist: "+conf.getWorldList());
-
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(utils, conf, data, mv,this));
         this.getCommand("regen").setTabCompleter(new TabCompleter(conf));

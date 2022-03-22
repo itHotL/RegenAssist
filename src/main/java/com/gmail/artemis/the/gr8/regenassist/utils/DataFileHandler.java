@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 public class DataFileHandler {
 
@@ -21,21 +20,6 @@ public class DataFileHandler {
         plugin = p;
     }
 
-    public String getLastRegenTime(String worldName) {
-        return (data.contains(worldName)) ? data.getString(worldName) : "";
-    }
-
-    //store values in the regen-data file (param: path, object to store)
-    public void writeToDataFile(String worldName, Instant date) {
-        try {
-            data.set(worldName, date.truncatedTo(ChronoUnit.SECONDS).toString());
-            saveDataFile();
-            plugin.getLogger().info("Successfully put regen-timestamp for "+worldName+" in data.yml");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     //load the datafile that will store regen-data (called in onEnable)
     public void loadDataFile() {
@@ -56,6 +40,26 @@ public class DataFileHandler {
         data.options().header("This file stores the date and time your worlds have last been regenerated");
         data.options().copyHeader(true);
         saveDataFile();
+    }
+
+    //store dates in the regen-data file (param: worldname, date to store)
+    public void writeToDataFile(String worldName, Instant date) {
+        try {
+            data.set(worldName, date.toString());
+            saveDataFile();
+            plugin.getLogger().info("Successfully put regen-timestamp for "+worldName+" in data.yml");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean hasDataEntry(String worldName) {
+        return (data.contains(worldName));
+    }
+
+    public String getLastRegenTime(String worldName) {
+        return (data.contains(worldName)) ? data.getString(worldName) : "";
     }
 
     //create a file to write world- and player-data to if none exists yet

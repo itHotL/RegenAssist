@@ -1,8 +1,6 @@
 package com.gmail.artemis.the.gr8.regenassist.utils;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public final class TimeHandler {
@@ -11,18 +9,12 @@ public final class TimeHandler {
     }
 
 
-    public static LocalDateTime getCurrentDateTime() {
-        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        return now;
-    }
-
     public static Instant getCurrentTime() {
-        return Instant.now();
+        return Instant.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     public static String getStringTimeSinceLastRegen(String regenTime) {
-        long seconds = getTimeSinceLastRegen(regenTime);
+        long seconds = getTimeSinceLastRegen(getLastRegenTime(regenTime));
 
         if (seconds>=86400) {
             int days = Math.round(seconds/60/60/24);
@@ -48,33 +40,29 @@ public final class TimeHandler {
         }
     }
 
-    public static Instant getLastPlayedTime (long unixTime) {
+    //checks if lastPlayed is before a reset (param: unix time lastPlayed, datafile String lastRegen)
+    public static boolean lastPlayedBeforeReset (long unixLastPlayed, String lastRegen) {
+        Instant lastPlayed = getLastPlayedTime(unixLastPlayed);
+        Instant lastRegenTime = getLastRegenTime(lastRegen);
+        return lastRegenTime != null && lastPlayed.isBefore(lastRegenTime);
+    }
+
+    private static Instant getLastPlayedTime (long unixTime) {
         return Instant.ofEpochSecond(unixTime/1000);
     }
 
-    private static long getTimeSinceLastRegen (String regenDateTime) {
+    private static Instant getLastRegenTime (String lastRegen) {
         try {
-            Instant regen = Instant.parse(regenDateTime);
-            return regen.until(Instant.now(), ChronoUnit.SECONDS);
-
-        } catch (Exception e) {
+            return Instant.parse(lastRegen);
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
 
-        return 0;
+        return null;
     }
 
-    /*private static long getTimeSinceLastRegen(String regenDateTime) {
-        LocalDateTime now = LocalDateTime.now();
-
-        try {
-            LocalDateTime regen = LocalDateTime.parse(regenDateTime, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-            return regen.until(now, ChronoUnit.SECONDS);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return 0;
-    }*/
+    private static long getTimeSinceLastRegen (Instant regenInstant) {
+        return (regenInstant == null) ? 0 : regenInstant.until(Instant.now(), ChronoUnit.SECONDS);
+    }
 }

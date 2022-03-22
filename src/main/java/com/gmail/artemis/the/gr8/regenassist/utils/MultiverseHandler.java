@@ -7,7 +7,7 @@ import java.util.List;
 
 public class MultiverseHandler {
 
-    private MVWorldManager worldManager;
+    private final MVWorldManager worldManager;
 
 
     public MultiverseHandler (MVWorldManager wm) {
