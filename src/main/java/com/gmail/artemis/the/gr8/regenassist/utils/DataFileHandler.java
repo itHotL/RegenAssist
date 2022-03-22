@@ -7,7 +7,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 public class DataFileHandler {
 
@@ -25,9 +26,9 @@ public class DataFileHandler {
     }
 
     //store values in the regen-data file (param: path, object to store)
-    public void writeToDataFile(String worldName, LocalDateTime date) {
+    public void writeToDataFile(String worldName, Instant date) {
         try {
-            data.set(worldName, date.toString());
+            data.set(worldName, date.truncatedTo(ChronoUnit.SECONDS).toString());
             saveDataFile();
             plugin.getLogger().info("Successfully put regen-timestamp for "+worldName+" in data.yml");
         }

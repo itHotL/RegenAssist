@@ -1,5 +1,6 @@
 package com.gmail.artemis.the.gr8.regenassist.utils;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -16,8 +17,12 @@ public final class TimeHandler {
         return now;
     }
 
-    public static String getStringTimeDifference(String regenTime) {
-        long seconds = getTimeDifference(regenTime);
+    public static Instant getCurrentTime() {
+        return Instant.now();
+    }
+
+    public static String getStringTimeSinceLastRegen(String regenTime) {
+        long seconds = getTimeSinceLastRegen(regenTime);
 
         if (seconds>=86400) {
             int days = Math.round(seconds/60/60/24);
@@ -43,7 +48,23 @@ public final class TimeHandler {
         }
     }
 
-    private static long getTimeDifference(String regenDateTime) {
+    public static Instant getLastPlayedTime (long unixTime) {
+        return Instant.ofEpochSecond(unixTime/1000);
+    }
+
+    private static long getTimeSinceLastRegen (String regenDateTime) {
+        try {
+            Instant regen = Instant.parse(regenDateTime);
+            return regen.until(Instant.now(), ChronoUnit.SECONDS);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    /*private static long getTimeSinceLastRegen(String regenDateTime) {
         LocalDateTime now = LocalDateTime.now();
 
         try {
@@ -55,5 +76,5 @@ public final class TimeHandler {
         }
 
         return 0;
-    }
+    }*/
 }

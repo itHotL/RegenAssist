@@ -2,6 +2,7 @@ package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
+import com.gmail.artemis.the.gr8.regenassist.utils.TimeHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -65,7 +66,7 @@ public class ConfirmCommand implements CommandExecutor {
                         new BukkitRunnable() {
                             public void run() {
                                 if (!mv.getUnloadedWorlds().contains(worldName)) {
-                                    data.writeToDataFile(worldName, TimeHandler.getCurrentDateTime());
+                                    data.writeToDataFile(worldName, TimeHandler.getCurrentTime());
                                     sender.sendMessage(MessageWriter.doneRegenerating(worldName));
                                     this.cancel();
                                 }

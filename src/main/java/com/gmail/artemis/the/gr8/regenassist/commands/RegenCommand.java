@@ -108,7 +108,7 @@ public class RegenCommand implements CommandExecutor {
     private String getTimeSinceLastRegen(String worldName) {
         String timestamp = data.getLastRegenTime(worldName);
         if (!timestamp.equalsIgnoreCase("")) {
-            return TimeHandler.getStringTimeDifference(timestamp);
+            return TimeHandler.getStringTimeSinceLastRegen(timestamp);
         }
 
         else {
