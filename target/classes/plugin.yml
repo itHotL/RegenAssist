@@ -15,6 +15,10 @@ commands:
     description: performs the actual regen for the specified world
     permission: regenassist.regen
     permission-message: §cYou do not have permission to execute this command!
+  regenreload:
+    description: reloads the config and datafiles
+    permission: regenassist.regen
+    permission-message: §cYou do not have permission to execute this command!
 permissions:
   regenassist.regen:
     description: Allows regen commands

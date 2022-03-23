@@ -33,6 +33,14 @@ public final class MessageWriter {
                 "{\"text\":\"The world you were in has been reset since you last played. You've been safely teleported back to spawn :D\",\"color\":\"white\"}]";
     }
 
+    public static String reloadedFiles() {
+        return ChatColor.GREEN + "Successfully reloaded all files!";
+    }
+
+    public static String notReloadedFiles() {
+        return ChatColor.RED + "Something went wrong and the files could not be reloaded.";
+    }
+
     public static String alreadyRegenerating() {
         return ChatColor.GOLD+"Someone else is already in the process of regenerating this world, please check again later!";
     }

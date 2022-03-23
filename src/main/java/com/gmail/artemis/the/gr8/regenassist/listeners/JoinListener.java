@@ -1,7 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.listeners;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.utils.DataFileHandler;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import com.gmail.artemis.the.gr8.regenassist.utils.TimeHandler;
 import org.bukkit.Bukkit;
@@ -13,10 +13,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class JoinListener implements Listener {
 
-    private final DataFileHandler data;
+    private final RegenFileHandler data;
     private final Main plugin;
 
-    public JoinListener(DataFileHandler d, Main p) {
+    public JoinListener(RegenFileHandler d, Main p) {
         data = d;
         plugin = p;
     }

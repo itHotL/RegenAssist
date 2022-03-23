@@ -1,6 +1,8 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -13,15 +15,16 @@ public class RegenCommand implements CommandExecutor {
 
     private final Utilities utils;
     private final ConfigHandler conf;
-    private final DataFileHandler data;
+    private final RegenFileHandler regenfile;
     private final MultiverseHandler mv;
     private final Main plugin;
 
-    public RegenCommand (Utilities u, ConfigHandler c, DataFileHandler d, MultiverseHandler m, Main p) {
-        utils = u;
+    public RegenCommand (ConfigHandler c, MultiverseHandler m, RegenFileHandler r, Utilities u, Main p) {
+
         conf = c;
-        data = d;
         mv = m;
+        regenfile = r;
+        utils = u;
         plugin = p;
     }
 
@@ -106,7 +109,7 @@ public class RegenCommand implements CommandExecutor {
 
     //calculate the time since this world has last been reset
     private String getTimeSinceLastRegen(String worldName) {
-        String timestamp = data.getLastRegenTime(worldName);
+        String timestamp = regenfile.getLastRegenTime(worldName);
         if (!timestamp.equalsIgnoreCase("")) {
             return TimeHandler.getStringTimeSinceLastRegen(timestamp);
         }

@@ -1,6 +1,6 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
-import com.gmail.artemis.the.gr8.regenassist.utils.ConfigHandler;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 

@@ -1,6 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,15 +12,15 @@ import java.util.UUID;
 
 public class ConfirmCommand implements CommandExecutor {
 
-    private final Utilities utils;
     private final MultiverseHandler mv;
-    private final DataFileHandler data;
+    private final RegenFileHandler regenfile;
+    private final Utilities utils;
     private final Main plugin;
 
-    public ConfirmCommand (Utilities u, MultiverseHandler m, DataFileHandler d, Main p) {
-        utils = u;
+    public ConfirmCommand (MultiverseHandler m, RegenFileHandler r, Utilities u, Main p) {
         mv = m;
-        data = d;
+        regenfile = r;
+        utils = u;
         plugin = p;
     }
 
@@ -65,7 +66,7 @@ public class ConfirmCommand implements CommandExecutor {
                         new BukkitRunnable() {
                             public void run() {
                                 if (!mv.getUnloadedWorlds().contains(worldName)) {
-                                    data.writeToDataFile(worldName, TimeHandler.getCurrentTime());
+                                    regenfile.writeToDataFile(worldName, TimeHandler.getCurrentTime());
                                     sender.sendMessage(MessageWriter.doneRegenerating(worldName));
                                     this.cancel();
                                 }
