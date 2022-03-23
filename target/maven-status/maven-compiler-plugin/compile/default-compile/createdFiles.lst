@@ -3,6 +3,7 @@ com\gmail\artemis\the\gr8\regenassist\filehandlers\RegenFileHandler.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\ConfigHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\JoinListener.class
 com\gmail\artemis\the\gr8\regenassist\commands\RegenCommand$1.class
+com\gmail\artemis\the\gr8\regenassist\listeners\QuitListener.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\PlayerFileHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\JoinListener$1.class
 com\gmail\artemis\the\gr8\regenassist\commands\ReloadCommand.class
