@@ -1,6 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.filehandlers;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
+import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,11 +23,11 @@ public class RegenFileHandler {
 
 
     //load the datafile that will store regen-data (called in onEnable)
-    public void loadDataFile() {
+    public void loadFile() {
 
         regenFile = new File(plugin.getDataFolder(), "regen.yml");
         if (!regenFile.exists()) {
-            createDataFile();
+            createFile();
         }
 
         regen = new YamlConfiguration();
@@ -39,11 +40,11 @@ public class RegenFileHandler {
 
         regen.options().header("This file stores the date and time your worlds have last been regenerated");
         regen.options().copyHeader(true);
-        saveDataFile();
+        saveFile();
     }
 
     //reload data from file (called in ReloadCommand)
-    public boolean reloadDataFile() {
+    public boolean reloadFile() {
         try {
             regen = YamlConfiguration.loadConfiguration(regenFile);
             return true;
@@ -55,10 +56,10 @@ public class RegenFileHandler {
     }
 
     //store dates in the regen-data file (param: worldname, date to store)
-    public void writeToDataFile(String worldName, Instant date) {
+    public void writeToFile(String worldName, Instant date) {
         try {
             regen.set(worldName, date.toString());
-            boolean saved = saveDataFile();
+            boolean saved = saveFile();
             if (saved) {
                 plugin.getLogger().info("Successfully put regen-timestamp for "+worldName+" in regen.yml");
             }
@@ -68,7 +69,7 @@ public class RegenFileHandler {
         }
     }
 
-    public boolean hasDataEntry(String worldName) {
+    public boolean hasEntry(String worldName) {
         return (regen.contains(worldName));
     }
 
@@ -77,7 +78,7 @@ public class RegenFileHandler {
     }
 
     //create a file to write world- and player-data to if none exists yet
-    private void createDataFile() {
+    private void createFile() {
         regenFile.getParentFile().mkdirs();
         try {
             regenFile.createNewFile();
@@ -88,7 +89,7 @@ public class RegenFileHandler {
     }
 
     //an extra safe save method
-    private boolean saveDataFile() {
+    private boolean saveFile() {
         try {
             regen.save(regenFile);
             return true;

@@ -8,6 +8,7 @@ import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.PlayerFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.listeners.JoinListener;
+import com.gmail.artemis.the.gr8.regenassist.listeners.QuitListener;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
@@ -44,8 +45,8 @@ public class Main extends JavaPlugin {
 
         //create datafiles if none exist yet, and load them
         conf.saveDefaultConfig();
-        plFile.loadDataFile();
-        regFile.loadDataFile();
+        plFile.loadFile();
+        regFile.loadFile();
 
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(conf, mv, regFile, utils,this));
@@ -53,8 +54,9 @@ public class Main extends JavaPlugin {
         this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mv, regFile, utils, this));
         this.getCommand("regenreload").setExecutor(new ReloadCommand(conf, plFile, regFile));
 
-        //register the JoinListener
-        Bukkit.getPluginManager().registerEvents(new JoinListener(regFile, this), this);
+        //register the Listeners
+        Bukkit.getPluginManager().registerEvents(new JoinListener(plFile, regFile, this), this);
+        Bukkit.getPluginManager().registerEvents(new QuitListener(plFile), this);
 
         getLogger().info("Enabled RegenAssist");
     }

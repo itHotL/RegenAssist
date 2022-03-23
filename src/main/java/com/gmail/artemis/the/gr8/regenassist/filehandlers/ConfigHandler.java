@@ -26,7 +26,7 @@ public class ConfigHandler {
     }
 
     //reload data from file (called in ReloadCommand)
-    public boolean reloadDataFile() {
+    public boolean reloadFile() {
         try {
             config = YamlConfiguration.loadConfiguration(configFile);
             return true;

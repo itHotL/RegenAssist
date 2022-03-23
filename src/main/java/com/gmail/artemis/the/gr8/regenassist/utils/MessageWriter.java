@@ -27,9 +27,9 @@ public final class MessageWriter {
     }
 
     public static String teleportMessage() {
-        return " [\"\",{\"text\":\"[\",\"color\":\"dark_gray\"}," +
+        return " [\"\",{\"text\":\"[\",\"color\":\"gray\"}," +
                 "{\"text\":\"RegenAssist\",\"color\":\"gold\"}," +
-                "{\"text\":\"] \",\"color\":\"dark_gray\"}," +
+                "{\"text\":\"] \",\"color\":\"gray\"}," +
                 "{\"text\":\"The world you were in has been reset since you last played. You've been safely teleported back to spawn :D\",\"color\":\"white\"}]";
     }
 

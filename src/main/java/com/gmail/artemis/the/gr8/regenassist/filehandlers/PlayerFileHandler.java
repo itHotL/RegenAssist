@@ -20,11 +20,11 @@ public class PlayerFileHandler {
 
 
     //load the datafile that will store regen-data (called in onEnable)
-    public void loadDataFile() {
+    public void loadFile() {
 
         playerFile = new File(plugin.getDataFolder(), "players.yml");
         if (!playerFile.exists()) {
-            createDataFile();
+            createFile();
         }
 
         player = new YamlConfiguration();
@@ -37,11 +37,11 @@ public class PlayerFileHandler {
 
         player.options().header("This file stores the world that players have logged out in, so RegenAssist can teleport them to safety if this world has been regenerated");
         player.options().copyHeader(true);
-        saveDataFile();
+        saveFile();
     }
 
     //reload data from file (called in ReloadCommand)
-    public boolean reloadDataFile() {
+    public boolean reloadFile() {
         try {
             player = YamlConfiguration.loadConfiguration(playerFile);
             return true;
@@ -53,10 +53,10 @@ public class PlayerFileHandler {
     }
 
     //store dates in the regen-data file (param: playername & worldname)
-    public void writeToDataFile(String playerName, String worldName) {
+    public void writeToFile(String playerName, String worldName) {
         try {
             player.set(playerName, worldName);
-            boolean saved = saveDataFile();
+            boolean saved = saveFile();
             if (saved) {
                 plugin.getLogger().info("Successfully saved logout world ["+worldName+"] in player.yml");
             }
@@ -66,7 +66,15 @@ public class PlayerFileHandler {
         }
     }
 
-    private void createDataFile() {
+    public boolean hasEntry(String playerName) {
+        return (player.contains(playerName));
+    }
+
+    public String getLogoutWorld(String playerName) {
+        return (player.contains(playerName)) ? player.getString(playerName) : "";
+    }
+
+    private void createFile() {
         playerFile.getParentFile().mkdirs();
         try {
             playerFile.createNewFile();
@@ -76,7 +84,7 @@ public class PlayerFileHandler {
         }
     }
 
-    private boolean saveDataFile() {
+    private boolean saveFile() {
         try {
             player.save(playerFile);
             return true;

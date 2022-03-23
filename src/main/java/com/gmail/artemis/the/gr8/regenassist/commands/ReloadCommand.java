@@ -1,6 +1,5 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
-import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.PlayerFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
@@ -23,7 +22,7 @@ public class ReloadCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        boolean reloaded = config.reloadDataFile() && playerfile.reloadDataFile() && regenfile.reloadDataFile();
+        boolean reloaded = config.reloadFile() && playerfile.reloadFile() && regenfile.reloadFile();
         if (reloaded) {
             sender.sendMessage(MessageWriter.reloadedFiles());
             return true;

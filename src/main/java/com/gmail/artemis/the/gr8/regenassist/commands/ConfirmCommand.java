@@ -66,7 +66,7 @@ public class ConfirmCommand implements CommandExecutor {
                         new BukkitRunnable() {
                             public void run() {
                                 if (!mv.getUnloadedWorlds().contains(worldName)) {
-                                    regenfile.writeToDataFile(worldName, TimeHandler.getCurrentTime());
+                                    regenfile.writeToFile(worldName, TimeHandler.getCurrentTime());
                                     sender.sendMessage(MessageWriter.doneRegenerating(worldName));
                                     this.cancel();
                                 }
