@@ -2,8 +2,13 @@ package com.gmail.artemis.the.gr8.regenassist;
 
 import com.gmail.artemis.the.gr8.regenassist.commands.ConfirmCommand;
 import com.gmail.artemis.the.gr8.regenassist.commands.RegenCommand;
+import com.gmail.artemis.the.gr8.regenassist.commands.ReloadCommand;
 import com.gmail.artemis.the.gr8.regenassist.commands.TabCompleter;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.PlayerFileHandler;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.listeners.JoinListener;
+import com.gmail.artemis.the.gr8.regenassist.listeners.QuitListener;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
@@ -15,42 +20,43 @@ public class Main extends JavaPlugin {
 
     private MVWorldManager worldManager;
     private MultiverseHandler mv;
-    private DataFileHandler data;
     private ConfigHandler conf;
+    private PlayerFileHandler plFile;
+    private RegenFileHandler regFile;
     private Utilities utils;
 
 
     @Override
     public void onEnable() {
-        //get an instance of the MVWorldManager from the Multiverse API
+        //get an instance of the MVWorldManager from the Multiverse API and pass it on to the MultiverseHandler
         MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
         if(core == null) {
             getLogger().severe("Multiverse-Core not found, RegenAssist cannot live without it </3");
             return;
         }
         worldManager = core.getMVWorldManager();
-
-        //get an instance of the ConfigHandler, DataFileHandler and Utilities class
-        utils = new Utilities();
-        data = new DataFileHandler(this);
-        conf = new ConfigHandler(this);
-
-        //pass the MVWorldManager and MessageWriter on to the MultiverseHandler class
         mv = new MultiverseHandler(worldManager);
 
-        //create a general config and data storage file if none exist yet, and load them
-        conf.saveDefaultConfig();
-        data.loadDataFile();
+        //get an instance of the FileHandlers and Utilities class
+        conf = new ConfigHandler(this);
+        plFile = new PlayerFileHandler(this);
+        regFile = new RegenFileHandler(this);
+        utils = new Utilities();
 
-        getLogger().info("Worldlist: "+conf.getWorldList());
+        //create datafiles if none exist yet, and load them
+        conf.saveDefaultConfig();
+        plFile.loadFile();
+        regFile.loadFile();
 
         //set command executors and pass the relevant instances on
-        this.getCommand("regen").setExecutor(new RegenCommand(utils, conf, data, mv,this));
+        this.getCommand("regen").setExecutor(new RegenCommand(conf, mv, regFile, utils,this));
         this.getCommand("regen").setTabCompleter(new TabCompleter(conf));
-        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(utils, mv, data, this));
+        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mv, regFile, utils, this));
+        this.getCommand("regenreload").setExecutor(new ReloadCommand(conf, plFile, regFile));
 
-        //register the JoinListener
-        Bukkit.getPluginManager().registerEvents(new JoinListener(data, this), this);
+        //register the Listeners
+        Bukkit.getPluginManager().registerEvents(new JoinListener(plFile, regFile, this), this);
+        Bukkit.getPluginManager().registerEvents(new QuitListener(plFile), this);
 
         getLogger().info("Enabled RegenAssist");
     }
