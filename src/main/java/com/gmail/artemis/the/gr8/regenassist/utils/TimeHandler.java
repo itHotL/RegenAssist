@@ -14,29 +14,31 @@ public final class TimeHandler {
     }
 
     public static String getStringTimeSinceLastRegen(String regenTime) {
+
+        //even though getTimeSinceLastRegen returns a long, the number is truncated to seconds and therefore always a whole number
         long seconds = getTimeSinceLastRegen(getLastRegenTime(regenTime));
 
         if (seconds>=86400) {
-            int days = Math.round(seconds/60/60/24);
+            long days = seconds/60/60/24;
             return (days ==1) ? (days + " day") : (days + " days");
         }
 
         else if (seconds>=3600) {
-            int hours = Math.round(seconds/60/60);
+            long hours = seconds/60/60;
             return (hours==1) ? (hours + " hour") : (hours + " hours");
         }
 
         else if (seconds>=60) {
-            int minutes = Math.round(seconds/60);
+            long minutes = seconds/60;
             return (minutes==1) ? (minutes + " minute") : (minutes + " minutes");
         }
 
-        else if (seconds==0) {
-            return "";
+        else if (seconds>0) {
+            return (seconds==1) ? (seconds + " second") : (seconds + " seconds");
         }
 
         else {
-            return (seconds==1) ? (seconds + " second") : (seconds + " seconds");
+            return "";
         }
     }
 
