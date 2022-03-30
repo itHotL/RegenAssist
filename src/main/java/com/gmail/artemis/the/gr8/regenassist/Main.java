@@ -20,10 +20,10 @@ public class Main extends JavaPlugin {
 
     private MVWorldManager worldManager;
     private MultiverseHandler mv;
-    private ConfigHandler conf;
-    private PlayerFileHandler plFile;
-    private RegenFileHandler regFile;
-    private Utilities utils;
+    private ConfigHandler config;
+    private PlayerFileHandler playerFile;
+    private RegenFileHandler regenFile;
+    private RegenQueue regenQueue;
 
 
     @Override
@@ -31,32 +31,32 @@ public class Main extends JavaPlugin {
         //get an instance of the MVWorldManager from the Multiverse API and pass it on to the MultiverseHandler
         MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
         if(core == null) {
-            getLogger().severe("Multiverse-Core not found, RegenAssist cannot live without it </3");
+            getLogger().severe("Multiverse-Core not found, RegenAssist cannot live without it");
             return;
         }
         worldManager = core.getMVWorldManager();
         mv = new MultiverseHandler(worldManager);
 
-        //get an instance of the FileHandlers and Utilities class
-        conf = new ConfigHandler(this);
-        plFile = new PlayerFileHandler(this);
-        regFile = new RegenFileHandler(this);
-        utils = new Utilities();
+        //get an instance of the FileHandlers and RegenQueue class
+        config = new ConfigHandler(this);
+        playerFile = new PlayerFileHandler(this);
+        regenFile = new RegenFileHandler(this);
+        regenQueue = new RegenQueue();
 
         //create datafiles if none exist yet, and load them
-        conf.saveDefaultConfig();
-        plFile.loadFile();
-        regFile.loadFile();
+        config.saveDefaultConfig();
+        playerFile.loadFile();
+        regenFile.loadFile();
 
         //set command executors and pass the relevant instances on
-        this.getCommand("regen").setExecutor(new RegenCommand(conf, mv, regFile, utils,this));
-        this.getCommand("regen").setTabCompleter(new TabCompleter(conf));
-        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mv, regFile, utils, this));
-        this.getCommand("regenreload").setExecutor(new ReloadCommand(conf, plFile, regFile));
+        this.getCommand("regen").setExecutor(new RegenCommand(config, mv, regenFile, regenQueue,this));
+        this.getCommand("regen").setTabCompleter(new TabCompleter(config));
+        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mv, regenFile, regenQueue, this));
+        this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));
 
         //register the Listeners
-        Bukkit.getPluginManager().registerEvents(new JoinListener(plFile, regFile, this), this);
-        Bukkit.getPluginManager().registerEvents(new QuitListener(plFile), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(playerFile, regenFile, this), this);
+        Bukkit.getPluginManager().registerEvents(new QuitListener(playerFile), this);
 
         getLogger().info("Enabled RegenAssist");
     }

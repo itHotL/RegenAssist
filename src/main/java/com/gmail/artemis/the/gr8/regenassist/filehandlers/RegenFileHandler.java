@@ -1,7 +1,6 @@
 package com.gmail.artemis.the.gr8.regenassist.filehandlers;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -13,18 +13,18 @@ import java.util.UUID;
 
 public class RegenCommand implements CommandExecutor {
 
-    private final Utilities utils;
-    private final ConfigHandler conf;
-    private final RegenFileHandler regenfile;
+    private final RegenQueue regenQueue;
+    private final ConfigHandler config;
+    private final RegenFileHandler regenFile;
     private final MultiverseHandler mv;
     private final Main plugin;
 
-    public RegenCommand (ConfigHandler c, MultiverseHandler m, RegenFileHandler r, Utilities u, Main p) {
+    public RegenCommand (ConfigHandler c, MultiverseHandler m, RegenFileHandler r, RegenQueue q, Main p) {
 
-        conf = c;
+        config = c;
         mv = m;
-        regenfile = r;
-        utils = u;
+        regenFile = r;
+        regenQueue = q;
         plugin = p;
     }
 
@@ -55,7 +55,15 @@ public class RegenCommand implements CommandExecutor {
             //check config to see whether world name is a valid option for regen
             else {
 
-                if(!conf.getWorldList().contains(args[0])) {
+                //check if to-be-regenerated world is not the main world
+                //get name of the main world from config, or assume 'world' if path is empty
+                String mainWorld = (config.getMainWorldName().equalsIgnoreCase("")) ? "world" : config.getMainWorldName();
+                if (args[0].equalsIgnoreCase(mainWorld)) {
+                    sender.sendMessage(MessageWriter.mainWorldWarning());
+                    return true;
+                }
+
+                if(!config.getWorldList().contains(args[0])) {
                     sender.sendMessage(MessageWriter.wrongName());
                     return true;
                 }
@@ -68,21 +76,20 @@ public class RegenCommand implements CommandExecutor {
                     }
 
                     //put unique confirm-code on HashMap attached to the worldName (if there is no entry for this name yet)
-                    else if(utils.getWorldCodes().containsValue(args[0])) {
+                    else if(regenQueue.containsWorldName(args[0])) {
                         sender.sendMessage(MessageWriter.alreadyRegenerating());
                         return true;
                     }
 
                     else {
-                        UUID uniqueCode = UUID.randomUUID();
-                        utils.getWorldCodes().put(uniqueCode, args[0]);
+                        UUID uniqueCode = regenQueue.createWorldCode(args[0]);
 
                         //start 15-second timer that removes unique code from the HashMap if it is still there
                         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
                             @Override
                             public void run() {
-                                if(utils.getWorldCodes().containsKey(uniqueCode)) {
-                                    utils.getWorldCodes().remove(uniqueCode);
+                                if(regenQueue.containsWorldCode(uniqueCode)) {
+                                    regenQueue.removeEntry(uniqueCode);
                                 }
                             }
                         }, 300L);
@@ -109,7 +116,7 @@ public class RegenCommand implements CommandExecutor {
 
     //calculate the time since this world has last been reset
     private String getTimeSinceLastRegen(String worldName) {
-        String timestamp = regenfile.getLastRegenTime(worldName);
+        String timestamp = regenFile.getLastRegenTime(worldName);
         if (!timestamp.equalsIgnoreCase("")) {
             return TimeHandler.getStringTimeSinceLastRegen(timestamp);
         }

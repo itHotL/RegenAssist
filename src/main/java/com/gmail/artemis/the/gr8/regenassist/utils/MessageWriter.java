@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 public final class MessageWriter {
 
     private MessageWriter() {
-
     }
 
     public static String confirmCommand(String worldName, String uniqueRegenCmd, String timeSinceRegen) {
@@ -42,7 +41,7 @@ public final class MessageWriter {
     }
 
     public static String alreadyRegenerating() {
-        return ChatColor.GOLD+"Someone else is already in the process of regenerating this world, please check again later!";
+        return ChatColor.GOLD + "Someone else is already in the process of regenerating this world, please check again later!";
     }
 
     public static String tooSlow() {
@@ -50,7 +49,7 @@ public final class MessageWriter {
     }
 
     public static String missingName() {
-        return ChatColor.RED+"Please specify a world";
+        return ChatColor.RED + "Please specify a world";
     }
 
     public static String wrongName() {
@@ -58,7 +57,7 @@ public final class MessageWriter {
     }
 
     public static String mainWorldWarning() {
-        return ChatColor.RED+"You cannot regenerate the main world!";
+        return ChatColor.RED + "You cannot regenerate your main world! " + "\n" + "(Multiverse cannot unload it)";
     }
 
     public static String unknownWorld() {

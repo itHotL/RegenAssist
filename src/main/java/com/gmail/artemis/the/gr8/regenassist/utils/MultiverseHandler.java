@@ -1,7 +1,6 @@
 package com.gmail.artemis.the.gr8.regenassist.utils;
 
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
@@ -14,25 +13,17 @@ public class MultiverseHandler {
         worldManager = wm;
     }
 
-
-    public boolean mvRegen(CommandSender sender, String worldName, boolean useNewSeed, boolean randomSeed, String seed, boolean keepGameRules) {
-
-        //if worldname = world, panic and cancel
-        if(worldName.equalsIgnoreCase("world")) {
-            sender.sendMessage(MessageWriter.mainWorldWarning());
-            return false;
-        }
-
-        //otherwise, perform the reset
-        else {
-            return worldManager.regenWorld(worldName, useNewSeed, randomSeed, seed, keepGameRules);
-        }
+    //perform the reset with the given parameters
+    public boolean mvRegen(String worldName, boolean useNewSeed, boolean randomSeed, String seed, boolean keepGameRules) {
+        return worldManager.regenWorld(worldName, useNewSeed, randomSeed, seed, keepGameRules);
     }
 
+    //check if a given world is known to Multiverse
     public boolean isMVWorld(String worldName) {
         return worldManager.isMVWorld(worldName);
     }
 
+    //check which worlds Multiverse knows about, but has not loaded (yet)
     public List<String> getUnloadedWorlds() {
         return worldManager.getUnloadedWorlds();
     }

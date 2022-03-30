@@ -9,10 +9,10 @@ import java.util.List;
 
 public class TabCompleter implements org.bukkit.command.TabCompleter {
 
-    private final ConfigHandler conf;
+    private final ConfigHandler config;
 
     public TabCompleter (ConfigHandler c) {
-        conf = c;
+        config = c;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         if(label.equalsIgnoreCase("regen")) {
 
             if(args.length == 1) {
-                for (String world : conf.getWorldList()) {
+                for (String world : config.getWorldList()) {
                     if(world.startsWith(args[0])) {
                         finalList.add(world);
                     }

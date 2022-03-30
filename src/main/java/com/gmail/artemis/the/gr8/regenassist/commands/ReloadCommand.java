@@ -11,18 +11,18 @@ import org.bukkit.command.CommandSender;
 public class ReloadCommand implements CommandExecutor {
 
     private final ConfigHandler config;
-    private final PlayerFileHandler playerfile;
-    private final RegenFileHandler regenfile;
+    private final PlayerFileHandler playerFile;
+    private final RegenFileHandler regenFile;
 
     public ReloadCommand (ConfigHandler c, PlayerFileHandler pl, RegenFileHandler r) {
         config = c;
-        regenfile = r;
-        playerfile = pl;
+        regenFile = r;
+        playerFile = pl;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        boolean reloaded = config.reloadFile() && playerfile.reloadFile() && regenfile.reloadFile();
+        boolean reloaded = config.reloadFile() && playerFile.reloadFile() && regenFile.reloadFile();
         if (reloaded) {
             sender.sendMessage(MessageWriter.reloadedFiles());
             return true;

@@ -37,6 +37,10 @@ public class ConfigHandler {
         }
     }
 
+    public String getMainWorldName() {
+        return config.getString("main world");
+    }
+
     public List<String> getWorldList() {
         return config.getStringList("worlds");
     }
