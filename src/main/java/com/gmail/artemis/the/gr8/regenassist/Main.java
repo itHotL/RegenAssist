@@ -13,7 +13,10 @@ import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Collection;
 
 
 public class Main extends JavaPlugin {
@@ -63,7 +66,10 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        //get the players that haven't logged out before the server shut down and write their location to the playerFile
+        Collection<? extends Player> playerList = Bukkit.getServer().getOnlinePlayers();
+        playerList.forEach(player -> playerFile.writeToFile(player.getName(),player.getWorld().getName()));
+
         getLogger().info("Disabled RegenAssist");
     }
-
 }

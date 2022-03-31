@@ -57,7 +57,7 @@ public class RegenCommand implements CommandExecutor {
 
                 //check if to-be-regenerated world is not the main world
                 //get name of the main world from config, or assume 'world' if path is empty
-                String mainWorld = (config.getMainWorldName().equalsIgnoreCase("")) ? "world" : config.getMainWorldName();
+                String mainWorld = (config.getMainWorldName()==null) ? "world" : config.getMainWorldName();
                 if (args[0].equalsIgnoreCase(mainWorld)) {
                     sender.sendMessage(MessageWriter.mainWorldWarning());
                     return true;
