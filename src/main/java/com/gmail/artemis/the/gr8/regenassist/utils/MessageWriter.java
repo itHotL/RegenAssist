@@ -53,7 +53,7 @@ public final class MessageWriter {
     }
 
     public static String wrongName() {
-        return ChatColor.RED + "This world is not listed as a world that can be regenerated.";
+        return ChatColor.RED + "This world is not on RegenAssist's list. If you want to regenerate it, add it to the config and use /regenreload.";
     }
 
     public static String mainWorldWarning() {
