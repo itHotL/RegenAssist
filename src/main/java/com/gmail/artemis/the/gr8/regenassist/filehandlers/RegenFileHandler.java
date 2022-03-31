@@ -12,7 +12,7 @@ import java.time.Instant;
 public class RegenFileHandler {
 
     private File regenFile;
-    private FileConfiguration regen;
+    private FileConfiguration regenConf;
     private final Main plugin;
 
 
@@ -29,23 +29,23 @@ public class RegenFileHandler {
             createFile();
         }
 
-        regen = new YamlConfiguration();
+        regenConf = new YamlConfiguration();
         try {
-            regen.load(regenFile);
+            regenConf.load(regenFile);
         }
         catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
 
-        regen.options().header("This file stores the date and time your worlds have last been regenerated");
-        regen.options().copyHeader(true);
+        regenConf.options().header("This file stores the date and time your worlds have last been regenerated");
+        regenConf.options().copyHeader(true);
         saveFile();
     }
 
     //reload data from file (called in ReloadCommand)
     public boolean reloadFile() {
         try {
-            regen = YamlConfiguration.loadConfiguration(regenFile);
+            regenConf = YamlConfiguration.loadConfiguration(regenFile);
             return true;
         }
         catch (Exception e) {
@@ -57,7 +57,7 @@ public class RegenFileHandler {
     //store dates in the regen-data file (param: worldname, date to store)
     public void writeToFile(String worldName, Instant date) {
         try {
-            regen.set(worldName, date.toString());
+            regenConf.set(worldName, date.toString());
             boolean saved = saveFile();
             if (saved) {
                 plugin.getLogger().info("Successfully put regen-timestamp for "+worldName+" in regen.yml");
@@ -69,11 +69,11 @@ public class RegenFileHandler {
     }
 
     public boolean hasEntry(String worldName) {
-        return (regen.contains(worldName));
+        return (regenConf.contains(worldName));
     }
 
     public String getLastRegenTime(String worldName) {
-        return (regen.contains(worldName)) ? regen.getString(worldName) : "";
+        return (regenConf.contains(worldName)) ? regenConf.getString(worldName) : "";
     }
 
     //create a file to write world- and player-data to if none exists yet
@@ -90,7 +90,7 @@ public class RegenFileHandler {
     //an extra safe save method
     private boolean saveFile() {
         try {
-            regen.save(regenFile);
+            regenConf.save(regenFile);
             return true;
         }
         catch (Exception e) {

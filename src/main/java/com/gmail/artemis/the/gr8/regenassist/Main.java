@@ -55,7 +55,7 @@ public class Main extends JavaPlugin {
         this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));
 
         //register the Listeners
-        Bukkit.getPluginManager().registerEvents(new JoinListener(playerFile, regenFile, this), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(config, mv, playerFile, regenFile, this), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(playerFile), this);
 
         getLogger().info("Enabled RegenAssist");

@@ -41,6 +41,10 @@ public class ConfigHandler {
         return config.getString("main world");
     }
 
+    public String getSpawnWorldName() {
+        return config.getString("spawnworld");
+    }
+
     public List<String> getWorldList() {
         return config.getStringList("worlds");
     }

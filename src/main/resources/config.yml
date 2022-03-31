@@ -1,5 +1,5 @@
 # This config contains the worlds that RegenAssist will allow you to regenerate and the world you want players to be teleported to if the world they were in has been regenerated
 
 main world: world
-world to teleport to: world
+spawnworld: world
 worlds:

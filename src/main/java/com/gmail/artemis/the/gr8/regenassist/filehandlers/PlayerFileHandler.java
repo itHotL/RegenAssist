@@ -11,7 +11,7 @@ import java.io.IOException;
 public class PlayerFileHandler {
 
     private File playerFile;
-    private FileConfiguration player;
+    private FileConfiguration playerConf;
     private final Main plugin;
 
     public PlayerFileHandler(Main p) {
@@ -27,23 +27,23 @@ public class PlayerFileHandler {
             createFile();
         }
 
-        player = new YamlConfiguration();
+        playerConf = new YamlConfiguration();
         try {
-            player.load(playerFile);
+            playerConf.load(playerFile);
         }
         catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
 
-        player.options().header("This file stores the world that players have logged out in, so RegenAssist can teleport them to safety if this world has been regenerated");
-        player.options().copyHeader(true);
+        playerConf.options().header("This file stores the world that players have logged out in, so RegenAssist can teleport them to safety if this world has been regenerated");
+        playerConf.options().copyHeader(true);
         saveFile();
     }
 
     //reload data from file (called in ReloadCommand)
     public boolean reloadFile() {
         try {
-            player = YamlConfiguration.loadConfiguration(playerFile);
+            playerConf = YamlConfiguration.loadConfiguration(playerFile);
             return true;
         }
         catch (Exception e) {
@@ -55,7 +55,7 @@ public class PlayerFileHandler {
     //store dates in the regen-data file (param: playername & worldname)
     public void writeToFile(String playerName, String worldName) {
         try {
-            player.set(playerName, worldName);
+            playerConf.set(playerName, worldName);
             boolean saved = saveFile();
             if (saved) {
                 plugin.getLogger().info("Successfully saved logout world ["+worldName+"] in player.yml");
@@ -67,11 +67,11 @@ public class PlayerFileHandler {
     }
 
     public boolean hasEntry(String playerName) {
-        return (player.contains(playerName));
+        return (playerConf.contains(playerName));
     }
 
     public String getLogoutWorld(String playerName) {
-        return (player.contains(playerName)) ? player.getString(playerName) : "";
+        return (playerConf.contains(playerName)) ? playerConf.getString(playerName) : "";
     }
 
     private void createFile() {
@@ -86,7 +86,7 @@ public class PlayerFileHandler {
 
     private boolean saveFile() {
         try {
-            player.save(playerFile);
+            playerConf.save(playerFile);
             return true;
         }
         catch (Exception e) {
