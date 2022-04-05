@@ -36,6 +36,13 @@ public final class MessageWriter {
         return ChatColor.GREEN + "Successfully reloaded all files!";
     }
 
+    public static String reloadedSomeFiles(boolean reloadedConfig) {
+        String basemsg = ChatColor.GOLD + "Some files failed to reload";
+        String configmsg = reloadedConfig ? ". The config did reload though!" : ", including the config.";
+
+        return basemsg+configmsg;
+    }
+
     public static String notReloadedFiles() {
         return ChatColor.RED + "Something went wrong and the files could not be reloaded.";
     }
