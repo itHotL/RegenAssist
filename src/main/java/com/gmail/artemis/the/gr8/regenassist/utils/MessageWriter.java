@@ -25,6 +25,12 @@ public final class MessageWriter {
                 "\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"[Click to confirm]\",\"italic\":true,\"color\":\"white\"}]}}]";
     }
 
+    public static String confirmCommandConsole(String worldName, String timeSinceRegen) {
+        String time = (timeSinceRegen.equalsIgnoreCase("")) ? "" :
+                ". This world was last regenerated " + ChatColor.GOLD + timeSinceRegen + ChatColor.RESET + " ago";
+        return "You are about to regenerate the " + ChatColor.AQUA + worldName + ChatColor.RESET + time + ". To continue, type /regenconfirm";
+    }
+
     public static String teleportMessage() {
         return " [\"\",{\"text\":\"[\",\"color\":\"gray\"}," +
                 "{\"text\":\"RegenAssist\",\"color\":\"gold\"}," +
