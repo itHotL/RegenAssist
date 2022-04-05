@@ -12,7 +12,7 @@ commands:
     permission-message: §cYou do not have permission to execute this command!
     usage: "/§bregen §a<worldname> §6{keep-seed | §6random-seed | §6supply-seed:§onumber-here} §d[reset-gamerules]"
   regenconfirm:
-    description: performs the actual regen for the specified world
+    description: confirms and executes regen commands
     permission: regenassist.regen
     permission-message: §cYou do not have permission to execute this command!
   regenreload:
@@ -21,6 +21,6 @@ commands:
     permission-message: §cYou do not have permission to execute this command!
 permissions:
   regenassist.regen:
-    description: Allows regen commands
+    description: Allows usage of all regen commands
     default: op
 

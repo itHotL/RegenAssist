@@ -22,14 +22,26 @@ public class ReloadCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        boolean reloaded = config.reloadFile() && playerFile.reloadFile() && regenFile.reloadFile();
-        if (reloaded) {
+        boolean rConfig = config.reloadFile();
+        boolean rPlayerFile = playerFile.reloadFile();
+        boolean rRegenFile = regenFile.reloadFile();
+
+        //if all files have been reloaded
+        if (rConfig && rPlayerFile && rRegenFile) {
             sender.sendMessage(MessageWriter.reloadedFiles());
             return true;
         }
 
-        sender.sendMessage(MessageWriter.notReloadedFiles());
-        return false;
-    }
+        //if some files have been reloaded
+        else if (rConfig || rPlayerFile || rRegenFile) {
+            sender.sendMessage(MessageWriter.reloadedSomeFiles(rConfig));
+            return true;
+        }
 
+        //if no files have been reloaded
+        else {
+            sender.sendMessage(MessageWriter.notReloadedFiles());
+            return false;
+        }
+    }
 }
