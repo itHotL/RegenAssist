@@ -10,8 +10,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.Console;
 import java.util.UUID;
 
 public class RegenCommand implements CommandExecutor {
@@ -32,7 +32,7 @@ public class RegenCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         //check if a worldname is included
         if(args.length == 0) {
@@ -81,8 +81,13 @@ public class RegenCommand implements CommandExecutor {
                     return true;
                 }
 
+                //get everything ready for confirm prompt (either for player, or console)
+                //args[0] = worldName
+                //args[1] = same-seed/random-seed/supply-seed:
+                //args[2] = optional reset-gamerules
                 else {
-                    UUID uniqueCode = regenQueue.createWorldCode(args[0]);
+                    String gamerules = (args.length == 3) ? args[2] : " ";
+                    UUID uniqueCode = regenQueue.createEntry(args[0], args[1], gamerules);
 
                     //start 15-second timer that removes unique code from the HashMap if it is still there
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -93,12 +98,6 @@ public class RegenCommand implements CommandExecutor {
                             }
                         }
                     }, 300L);
-
-                    //get everything ready for confirm prompt (either for player, or console)
-                    //args[0] = worldName
-                    //args[1] = same-seed/random-seed/supply-seed:
-                    //args[2] = optional reset-gamerules
-                    String gamerules = (args.length == 3) ? args[2] : " ";
 
                     //give confirm prompt to player
                     if (sender instanceof Player) {

@@ -7,6 +7,7 @@ import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class ReloadCommand implements CommandExecutor {
 
@@ -21,7 +22,7 @@ public class ReloadCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         boolean rConfig = config.reloadFile();
         boolean rPlayerFile = playerFile.reloadFile();
         boolean rRegenFile = regenFile.reloadFile();

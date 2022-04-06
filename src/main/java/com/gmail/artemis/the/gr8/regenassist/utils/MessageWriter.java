@@ -28,7 +28,7 @@ public final class MessageWriter {
     public static String confirmCommandConsole(String worldName, String timeSinceRegen) {
         String time = (timeSinceRegen.equalsIgnoreCase("")) ? "" :
                 ". This world was last regenerated " + ChatColor.GOLD + timeSinceRegen + ChatColor.RESET + " ago";
-        return "You are about to regenerate the " + ChatColor.AQUA + worldName + ChatColor.RESET + time + ". To continue, type /regenconfirm";
+        return "You are about to regenerate the " + ChatColor.AQUA + worldName + ChatColor.RESET + time + ". To continue, type /regenconfirm " + worldName;
     }
 
     public static String teleportMessage() {
