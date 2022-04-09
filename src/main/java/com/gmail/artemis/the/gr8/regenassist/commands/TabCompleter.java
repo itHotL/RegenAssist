@@ -3,6 +3,7 @@ package com.gmail.artemis.the.gr8.regenassist.commands;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, String label, String[] args) {
 
         //show the names of worlds that can be regenerated
         List<String> finalList = new ArrayList<>();

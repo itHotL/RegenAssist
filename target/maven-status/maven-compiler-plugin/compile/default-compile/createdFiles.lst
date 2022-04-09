@@ -2,7 +2,6 @@ com\gmail\artemis\the\gr8\regenassist\utils\TimeHandler.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\RegenFileHandler.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\ConfigHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\JoinListener.class
-com\gmail\artemis\the\gr8\regenassist\commands\RegenCommand$1.class
 com\gmail\artemis\the\gr8\regenassist\listeners\QuitListener.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\PlayerFileHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\JoinListener$1.class
@@ -15,3 +14,4 @@ com\gmail\artemis\the\gr8\regenassist\commands\RegenCommand.class
 com\gmail\artemis\the\gr8\regenassist\utils\MultiverseHandler.class
 com\gmail\artemis\the\gr8\regenassist\Main.class
 com\gmail\artemis\the\gr8\regenassist\utils\RegenQueue.class
+com\gmail\artemis\the\gr8\regenassist\utils\RegenCandidate.class

@@ -44,7 +44,7 @@ public class Main extends JavaPlugin {
         config = new ConfigHandler(this);
         playerFile = new PlayerFileHandler(this);
         regenFile = new RegenFileHandler(this);
-        regenQueue = new RegenQueue();
+        regenQueue = new RegenQueue(this);
 
         //create datafiles if none exist yet, and load them
         config.saveDefaultConfig();
@@ -52,7 +52,7 @@ public class Main extends JavaPlugin {
         regenFile.loadFile();
 
         //set command executors and pass the relevant instances on
-        this.getCommand("regen").setExecutor(new RegenCommand(config, mv, regenFile, regenQueue,this));
+        this.getCommand("regen").setExecutor(new RegenCommand(config, mv, regenFile, regenQueue));
         this.getCommand("regen").setTabCompleter(new TabCompleter(config));
         this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mv, regenFile, regenQueue, this));
         this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));

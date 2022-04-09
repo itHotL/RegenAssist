@@ -25,6 +25,12 @@ public final class MessageWriter {
                 "\"hoverEvent\":{\"action\":\"show_text\",\"contents\":[{\"text\":\"[Click to confirm]\",\"italic\":true,\"color\":\"white\"}]}}]";
     }
 
+    public static String confirmCommandConsole(String worldName, String timeSinceRegen) {
+        String time = (timeSinceRegen.equalsIgnoreCase("")) ? "" :
+                ". This world was last regenerated " + ChatColor.GOLD + timeSinceRegen + ChatColor.RESET + " ago";
+        return "You are about to regenerate the " + ChatColor.AQUA + worldName + ChatColor.RESET + time + ". To continue, type /regenconfirm " + worldName;
+    }
+
     public static String teleportMessage() {
         return " [\"\",{\"text\":\"[\",\"color\":\"gray\"}," +
                 "{\"text\":\"RegenAssist\",\"color\":\"gold\"}," +
@@ -85,6 +91,10 @@ public final class MessageWriter {
 
     public static String doneRegenerating(String worldName) {
         return ChatColor.GREEN + "The " + ChatColor.AQUA + worldName + ChatColor.GREEN + " has been successfully regenerated!";
+    }
+
+    public static String unknownRegenStatus(String worldName) {
+        return "Unable to confirm whether " + worldName + " has been regenerated.";
     }
 
     public static String unknownError(String worldName) {
