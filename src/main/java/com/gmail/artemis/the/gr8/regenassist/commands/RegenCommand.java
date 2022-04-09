@@ -89,16 +89,6 @@ public class RegenCommand implements CommandExecutor {
                     String gamerules = (args.length == 3) ? args[2] : " ";
                     UUID uniqueCode = regenQueue.createEntry(args[0], args[1], gamerules);
 
-                    //start 15-second timer that removes unique code from the HashMap if it is still there
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                        @Override
-                        public void run() {
-                            if(regenQueue.containsWorldCode(uniqueCode)) {
-                                regenQueue.removeEntry(uniqueCode);
-                            }
-                        }
-                    }, 300L);
-
                     //give confirm prompt to player
                     if (sender instanceof Player) {
                         String confirmCmd = "tellraw "+sender.getName()+ MessageWriter.confirmCommand(args[0], getUniqueRegenCmd(uniqueCode, args[1], gamerules), getTimeSinceLastRegen(args[0]));

@@ -44,7 +44,7 @@ public class Main extends JavaPlugin {
         config = new ConfigHandler(this);
         playerFile = new PlayerFileHandler(this);
         regenFile = new RegenFileHandler(this);
-        regenQueue = new RegenQueue();
+        regenQueue = new RegenQueue(this);
 
         //create datafiles if none exist yet, and load them
         config.saveDefaultConfig();
