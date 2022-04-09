@@ -93,6 +93,10 @@ public final class MessageWriter {
         return ChatColor.GREEN + "The " + ChatColor.AQUA + worldName + ChatColor.GREEN + " has been successfully regenerated!";
     }
 
+    public static String unknownRegenStatus(String worldName) {
+        return "Unable to confirm whether " + worldName + " has been regenerated.";
+    }
+
     public static String unknownError(String worldName) {
         return ChatColor.RED + "Something went wrong, and the " + worldName + " could not be regenerated.";
     }

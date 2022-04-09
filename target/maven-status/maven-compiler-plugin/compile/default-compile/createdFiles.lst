@@ -1,6 +1,5 @@
 com\gmail\artemis\the\gr8\regenassist\utils\TimeHandler.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\RegenFileHandler.class
-com\gmail\artemis\the\gr8\regenassist\utils\RegenQueue$1.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\ConfigHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\JoinListener.class
 com\gmail\artemis\the\gr8\regenassist\listeners\QuitListener.class

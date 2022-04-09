@@ -1,6 +1,5 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
-import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
@@ -20,15 +19,13 @@ public class RegenCommand implements CommandExecutor {
     private final ConfigHandler config;
     private final RegenFileHandler regenFile;
     private final MultiverseHandler mv;
-    private final Main plugin;
 
-    public RegenCommand (ConfigHandler c, MultiverseHandler m, RegenFileHandler r, RegenQueue q, Main p) {
+    public RegenCommand (ConfigHandler c, MultiverseHandler m, RegenFileHandler r, RegenQueue q) {
 
         config = c;
         mv = m;
         regenFile = r;
         regenQueue = q;
-        plugin = p;
     }
 
     @Override
@@ -52,7 +49,6 @@ public class RegenCommand implements CommandExecutor {
             return false;
         }
 
-        //check config to see whether world name is a valid option for regen
         else {
 
             //check if to-be-regenerated world is not the main world
@@ -63,6 +59,7 @@ public class RegenCommand implements CommandExecutor {
                 return true;
             }
 
+            //check config to see whether world name is a valid option for regen
             if(!config.getWorldList().contains(args[0])) {
                 sender.sendMessage(MessageWriter.wrongName());
                 return true;

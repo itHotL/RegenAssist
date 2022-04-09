@@ -3,12 +3,14 @@ package com.gmail.artemis.the.gr8.regenassist.commands;
 import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -82,9 +84,10 @@ public class ConfirmCommand implements CommandExecutor {
         return mv.mvRegen(worldName, useNewSeed, randomSeed, seed, keepGameRules);
     }
 
-    //check every second if the world has been loaded again after regenerating, and stop + give feedback when the world has been loaded
+    //check every second if the world has been loaded again after regenerating
+    //stop + give feedback when the world has been loaded or after 30 seconds
     private boolean finishedRegen(CommandSender sender, String worldName) {
-        new BukkitRunnable() {
+        BukkitTask unloadedWorldsChecker = new BukkitRunnable() {
             public void run() {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
@@ -93,6 +96,15 @@ public class ConfirmCommand implements CommandExecutor {
                 }
             }
         }.runTaskTimer(plugin, 20L, 20L);
+
+        if (!unloadedWorldsChecker.isCancelled()) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                if (!unloadedWorldsChecker.isCancelled()) {
+                    unloadedWorldsChecker.cancel();
+                    plugin.getLogger().warning(MessageWriter.unknownRegenStatus(worldName));
+                }
+            }, 600L);
+        }
         return true;
     }
 }

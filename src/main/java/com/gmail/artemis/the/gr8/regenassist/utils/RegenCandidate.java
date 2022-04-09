@@ -2,9 +2,9 @@ package com.gmail.artemis.the.gr8.regenassist.utils;
 
 public class RegenCandidate {
 
-    private String worldName;
-    private String seedOption;
-    private String resetGameRules;
+    private final String worldName;
+    private final String seedOption;
+    private final String resetGameRules;
 
 
     public RegenCandidate(String name, String seed, String gamerules) {
