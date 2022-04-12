@@ -21,12 +21,14 @@ public class ConfirmCommand implements CommandExecutor {
     private final RegenFileHandler regenFile;
     private final RegenQueue regenQueue;
     private final Main plugin;
+    private final PortalHandler portalHandler;
     private String worldName;
 
-    public ConfirmCommand (MultiverseHandler m, RegenFileHandler r, RegenQueue q, Main p) {
+    public ConfirmCommand (MultiverseHandler m, RegenFileHandler r, RegenQueue q, PortalHandler po, Main p) {
         mv = m;
         regenFile = r;
         regenQueue = q;
+        portalHandler = po;
         plugin = p;
     }
 
@@ -52,7 +54,7 @@ public class ConfirmCommand implements CommandExecutor {
                 }
 
                 else {
-                    return finishedRegen(sender, args[0]);
+                    return finishedRegen(sender, worldName);
                 }
             }
         }
@@ -92,6 +94,7 @@ public class ConfirmCommand implements CommandExecutor {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
                     sender.sendMessage(MessageWriter.doneRegenerating(worldName));
+                    portalHandler.getSafePortalLocation(worldName);
                     this.cancel();
                 }
             }

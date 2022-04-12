@@ -24,6 +24,7 @@ public class Main extends JavaPlugin {
     private MVWorldManager worldManager;
     private MultiverseHandler mv;
     private ConfigHandler config;
+    private PortalHandler portalHandler;
     private PlayerFileHandler playerFile;
     private RegenFileHandler regenFile;
     private RegenQueue regenQueue;
@@ -40,9 +41,10 @@ public class Main extends JavaPlugin {
         worldManager = core.getMVWorldManager();
         mv = new MultiverseHandler(worldManager);
 
-        //get an instance of the FileHandlers and RegenQueue class
+        //get an instance of all the classes that need to be instantiated
         config = new ConfigHandler(this);
         playerFile = new PlayerFileHandler(this);
+        portalHandler = new PortalHandler(this);
         regenFile = new RegenFileHandler(this);
         regenQueue = new RegenQueue(this);
 
@@ -54,7 +56,7 @@ public class Main extends JavaPlugin {
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(config, mv, regenFile, regenQueue));
         this.getCommand("regen").setTabCompleter(new TabCompleter(config));
-        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mv, regenFile, regenQueue, this));
+        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mv, regenFile, regenQueue, portalHandler,this));
         this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));
 
         //register the Listeners
