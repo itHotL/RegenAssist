@@ -100,4 +100,5 @@ public final class MessageWriter {
     public static String unknownError(String worldName) {
         return ChatColor.RED + "Something went wrong, and the " + worldName + " could not be regenerated.";
     }
+
 }

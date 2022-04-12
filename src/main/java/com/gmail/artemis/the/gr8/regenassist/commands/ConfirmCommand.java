@@ -17,25 +17,26 @@ import java.util.UUID;
 
 public class ConfirmCommand implements CommandExecutor {
 
-    private final MultiverseHandler mv;
+    private final MVCoreHandler mv;
+    private final MVPortalsHandler mvPortalsHandler;
     private final RegenFileHandler regenFile;
     private final RegenQueue regenQueue;
     private final Main plugin;
-    private final PortalHandler portalHandler;
     private String worldName;
 
-    public ConfirmCommand (MultiverseHandler m, RegenFileHandler r, RegenQueue q, PortalHandler po, Main p) {
+    public ConfirmCommand (MVCoreHandler m, MVPortalsHandler mvp, RegenFileHandler r, RegenQueue q, Main p) {
+
         mv = m;
+        mvPortalsHandler = mvp;
         regenFile = r;
         regenQueue = q;
-        portalHandler = po;
         plugin = p;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        //if player clicks confirm within 15 seconds, get worldName from HashMap and pass it on to the MultiverseHandler
+        //if player clicks confirm within 15 seconds, get worldName from HashMap and pass it on to the MVCoreHandler
         //args[0] = uniqueCode
         //args[1] = same-seed/random-seed/supply-seed:
         //args[2] = optional reset-gamerules
@@ -94,7 +95,7 @@ public class ConfirmCommand implements CommandExecutor {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
                     sender.sendMessage(MessageWriter.doneRegenerating(worldName));
-                    portalHandler.getSafePortalLocation(worldName);
+                    mvPortalsHandler.getSafePortalLocation(worldName);
                     this.cancel();
                 }
             }

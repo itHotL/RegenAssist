@@ -15,15 +15,17 @@ import java.util.UUID;
 
 public class RegenCommand implements CommandExecutor {
 
-    private final RegenQueue regenQueue;
     private final ConfigHandler config;
+    private final MVCoreHandler mv;
+    private final MVPortalsHandler mvp;
     private final RegenFileHandler regenFile;
-    private final MultiverseHandler mv;
+    private final RegenQueue regenQueue;
 
-    public RegenCommand (ConfigHandler c, MultiverseHandler m, RegenFileHandler r, RegenQueue q) {
+    public RegenCommand (ConfigHandler c, MVCoreHandler m, MVPortalsHandler mp, RegenFileHandler r, RegenQueue q) {
 
         config = c;
         mv = m;
+        mvp = mp;
         regenFile = r;
         regenQueue = q;
     }
@@ -32,7 +34,7 @@ public class RegenCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         //check if a worldname is included
-        if(args.length == 0) {
+        if (args.length == 0) {
             sender.sendMessage(MessageWriter.missingName());
             return false;
         }
@@ -60,20 +62,20 @@ public class RegenCommand implements CommandExecutor {
             }
 
             //check config to see whether world name is a valid option for regen
-            if(!config.getWorldList().contains(args[0])) {
+            if (!config.getWorldList().contains(args[0])) {
                 sender.sendMessage(MessageWriter.wrongName());
                 return true;
             }
 
             else {
 
-                if(!mv.isMVWorld(args[0])) {
+                if (!mv.isMVWorld(args[0])) {
                     sender.sendMessage(MessageWriter.unknownWorld());
                     return true;
                 }
 
                 //put unique confirm-code on HashMap attached to the worldName (if there is no entry for this name yet)
-                else if(regenQueue.containsWorldName(args[0])) {
+                else if (regenQueue.containsWorldName(args[0])) {
                     sender.sendMessage(MessageWriter.alreadyRegenerating());
                     return true;
                 }
@@ -96,6 +98,7 @@ public class RegenCommand implements CommandExecutor {
                     //give confirm prompt in console
                     else if (sender instanceof ConsoleCommandSender) {
                         sender.sendMessage(MessageWriter.confirmCommandConsole(args[0], getTimeSinceLastRegen(args[0])));
+                        mvp.findOldPortals(args[0]);
                         return true;
                     }
 

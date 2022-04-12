@@ -50,7 +50,7 @@ public class RegenQueue {
     //start 15-second timer that removes unique code from the HashMap if it is still there
     private void startTimer(UUID uuid) {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            if(containsWorldCode(uuid)) {
+            if (containsWorldCode(uuid)) {
                 RegenCandidate canceledCandidate = removeEntry(uuid);
                 plugin.getLogger().info("15 seconds have passed, so " + canceledCandidate.getWorldName() + " has been removed from the regen queue.");
             }

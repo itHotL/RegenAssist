@@ -4,12 +4,13 @@ import com.onarandombox.MultiverseCore.api.MVWorldManager;
 
 import java.util.List;
 
-public class MultiverseHandler {
+public class MVCoreHandler {
 
     private final MVWorldManager worldManager;
 
 
-    public MultiverseHandler (MVWorldManager wm) {
+    public MVCoreHandler(MVWorldManager wm) {
+
         worldManager = wm;
     }
 

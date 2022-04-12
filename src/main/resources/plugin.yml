@@ -5,6 +5,8 @@ api-version: 1.18
 description: executes the Multiverse regen command for a specific world only
 author: Artemis_the_gr8
 depend: [Multiverse-Core]
+softdepend:
+  - Multiverse-Portals
 commands:
   regen:
     description: requests a regen for the specified world
