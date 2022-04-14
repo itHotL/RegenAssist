@@ -98,7 +98,6 @@ public class RegenCommand implements CommandExecutor {
                     //give confirm prompt in console
                     else if (sender instanceof ConsoleCommandSender) {
                         sender.sendMessage(MessageWriter.confirmCommandConsole(args[0], getTimeSinceLastRegen(args[0])));
-                        mvp.findOldPortals(args[0]);
                         return true;
                     }
 

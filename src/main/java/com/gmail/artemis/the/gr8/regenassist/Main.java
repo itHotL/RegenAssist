@@ -47,7 +47,7 @@ public class Main extends JavaPlugin {
         //if Multiverse-Portals is present, get an instance of the MVPortals API and pass it on to the MVPortalsHandler (might be null)
         MultiversePortals portals = (MultiversePortals) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Portals");
         portalManager = (portals == null) ? null : portals.getPortalManager();
-        mvPortalsHandler = new MVPortalsHandler(portalManager, this);
+        mvPortalsHandler = new MVPortalsHandler(portals, portalManager, this);
 
         //get an instance of all the classes that need to be instantiated
         config = new ConfigHandler(this);

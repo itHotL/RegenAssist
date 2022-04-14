@@ -18,16 +18,16 @@ import java.util.UUID;
 public class ConfirmCommand implements CommandExecutor {
 
     private final MVCoreHandler mv;
-    private final MVPortalsHandler mvPortalsHandler;
+    private final MVPortalsHandler mvp;
     private final RegenFileHandler regenFile;
     private final RegenQueue regenQueue;
     private final Main plugin;
     private String worldName;
 
-    public ConfirmCommand (MVCoreHandler m, MVPortalsHandler mvp, RegenFileHandler r, RegenQueue q, Main p) {
+    public ConfirmCommand (MVCoreHandler m, MVPortalsHandler mp, RegenFileHandler r, RegenQueue q, Main p) {
 
         mv = m;
-        mvPortalsHandler = mvp;
+        mvp = mp;
         regenFile = r;
         regenQueue = q;
         plugin = p;
@@ -55,7 +55,10 @@ public class ConfirmCommand implements CommandExecutor {
                 }
 
                 else {
-                    return finishedRegen(sender, worldName);
+                    if (finishedRegen(sender, worldName)) {
+                        return fixedPortal(sender, worldName);
+                    }
+                    return false;
                 }
             }
         }
@@ -63,7 +66,7 @@ public class ConfirmCommand implements CommandExecutor {
         //if confirm is typed in console within 15 seconds, get uuid that corresponds to the worldname and start the regen
         else if (sender instanceof ConsoleCommandSender) {
             if (args.length == 1 && regenQueue.containsWorldName(args[0])) {
-                return startRegen(sender, regenQueue.getWorldCode(args[0]).toString()) && finishedRegen(sender, args[0]);
+                return startRegen(sender, regenQueue.getWorldCode(args[0]).toString()) && finishedRegen(sender, args[0]) && fixedPortal(sender, args[0]);
             }
         }
         return false;
@@ -95,20 +98,23 @@ public class ConfirmCommand implements CommandExecutor {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
                     sender.sendMessage(MessageWriter.doneRegenerating(worldName));
-                    mvPortalsHandler.getSafePortalLocation(worldName);
                     this.cancel();
                 }
             }
         }.runTaskTimer(plugin, 20L, 20L);
 
-        if (!unloadedWorldsChecker.isCancelled()) {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                if (!unloadedWorldsChecker.isCancelled()) {
-                    unloadedWorldsChecker.cancel();
-                    plugin.getLogger().warning(MessageWriter.unknownRegenStatus(worldName));
-                }
-            }, 600L);
-        }
+        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+            if (!unloadedWorldsChecker.isCancelled()) {
+                unloadedWorldsChecker.cancel();
+                plugin.getLogger().warning(MessageWriter.unknownRegenStatus(worldName));
+            }
+        }, 600L);
+
         return true;
+    }
+
+    //check if there was a portal that needs to be re-made
+    private boolean fixedPortal(CommandSender sender, String worldName) {
+        return mvp.relocatePotentialPortal(sender, worldName);
     }
 }
