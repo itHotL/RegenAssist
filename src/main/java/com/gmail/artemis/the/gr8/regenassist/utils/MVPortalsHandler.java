@@ -24,8 +24,9 @@ public class MVPortalsHandler {
         plugin = p;
     }
 
-    //this currently supports a single portal --> maybe more in the future?
-    public boolean relocatePotentialPortal (CommandSender sender, String worldName) {
+    //check if there is a pre-existing portal, print a new portal structure, move the MVPortal to it
+    //return the y-level to set players to spawn at (or 500 if anything fails)
+    public double relocatePotentialPortal (CommandSender sender, String worldName) {
         List<MVPortal> portals = portalManager.getAllPortals();
 
         for (MVPortal portal : portals) {
@@ -33,33 +34,32 @@ public class MVPortalsHandler {
                 sender.sendMessage(MessageWriter.portalFound());
                 plugin.getLogger().info("Portal \"" + portal.getName() + "\" found");
 
-                String successMessage = (portal.setPortalLocation(createPortalStructure(worldName), worldName)) ? "Portal moved!" : "Moving portal failed.";
-                mvpAPI.savePortalsConfig();
-                mvpAPI.reloadConfigs();
-                sender.sendMessage(successMessage);
-                return true;
+                World world = Bukkit.getServer().getWorld(worldName);
+                if (world != null) {
+                    int platformHeight = createPortalStructure(world);
+                    int portalBottom = platformHeight+2;
+                    int portalTop = portalBottom+2;
+                    String mvportalLocation = "0.0," + portalBottom + ".0,0.0:0.0," + portalTop + ".0,1.0";
+                    portal.setPortalLocation(mvportalLocation, worldName);
+                    mvpAPI.savePortalsConfig();
+                    mvpAPI.reloadConfigs();
+                    return platformHeight+1;
+                }
             }
         }
-        return false;
+        return 500;
     }
 
-    //creates a portal structure at spawn and return the location for the mvportal to move to (or empty string if world is null)
-    private String createPortalStructure(String worldname) {
-        World world = Bukkit.getServer().getWorld(worldname);
-
-        if (world != null) {
-            int floorLevel = getHighestBlockAtSpawn(world);
-
-            //print all the different portal parts and get the location for the mvportal to move to
-            printPlatform(world, floorLevel);
-            String mvportalLocation = printPortalInside(world, floorLevel+2);
-            printPortalFrame(world, floorLevel+1);
-            return mvportalLocation;
-        }
-        return "";
+    //print all the different portal parts at spawn, and return the y level the platform has been printed on
+    private int createPortalStructure(World world) {
+        int platformHeight = getHighestBlockAtSpawn(world);
+        printPlatform(world, platformHeight);
+        printPortalInside(world, platformHeight+2);
+        printPortalFrame(world, platformHeight+1);
+        return platformHeight;
     }
 
-    //checks in a 8x8 radius around 0,0 what the highest block is
+    //check in a 8x8 radius around 0,0 what the highest block is
     private int getHighestBlockAtSpawn(World world) {
         int highest = 0;
         for (int x = -3; x <= 4; x++) {
@@ -73,14 +73,13 @@ public class MVPortalsHandler {
         return highest;
     }
 
-    //print an 8x8 platform underneath the portal and set spawn on this platform
+    //print an 8x8 platform underneath the portal
     private void printPlatform(World world, int y) {
-        for (int x = -3; x <= 4; x++) {
-            for (int z = -3; z <= 4; z++) {
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -2; z <= 3; z++) {
                 world.setType(x, y, z, Material.QUARTZ_BLOCK);
             }
         }
-        world.setSpawnLocation(3, y+1, 0);
     }
 
     //print portal frame with x:0 and z:-1, 0, 1 and 2
@@ -99,8 +98,8 @@ public class MVPortalsHandler {
         }
     }
 
-    //print the inside of the portal with x:0 and z:0 and 1, and return the location as a string
-    private String printPortalInside(World world, int startHeight) {
+    //print the inside of the portal with x:0 and z:0-1
+    private void printPortalInside(World world, int startHeight) {
         world.setType(0, startHeight, 0, Material.PURPLE_STAINED_GLASS_PANE);
         world.setType(0, startHeight+1, 0, Material.PURPLE_STAINED_GLASS_PANE);
         world.setType(0, startHeight+2, 0, Material.PURPLE_STAINED_GLASS_PANE);
@@ -108,9 +107,5 @@ public class MVPortalsHandler {
         world.setType(0, startHeight, 1, Material.PURPLE_STAINED_GLASS_PANE);
         world.setType(0, startHeight+1, 1, Material.PURPLE_STAINED_GLASS_PANE);
         world.setType(0, startHeight+2, 1, Material.PURPLE_STAINED_GLASS_PANE);
-        int endHeight = startHeight+2;
-        String mvportalLocation = "0.0,"+startHeight+".0,0.0:0.0,"+endHeight+".0,1.0";
-        plugin.getLogger().info("Portal location: " + mvportalLocation);
-        return mvportalLocation;
     }
 }

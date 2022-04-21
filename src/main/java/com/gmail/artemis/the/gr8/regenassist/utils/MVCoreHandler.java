@@ -1,6 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.utils;
 
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import org.bukkit.Location;
 
 import java.util.List;
 
@@ -22,6 +23,10 @@ public class MVCoreHandler {
     //check if a given world is known to Multiverse
     public boolean isMVWorld(String worldName) {
         return worldManager.isMVWorld(worldName);
+    }
+
+    public void setSpawn(String worldName, Location location) {
+        worldManager.getMVWorld(worldName).setSpawnLocation(location);
     }
 
     //check which worlds Multiverse knows about, but has not loaded (yet)

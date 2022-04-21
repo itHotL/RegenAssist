@@ -4,6 +4,7 @@ import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -54,11 +55,9 @@ public class ConfirmCommand implements CommandExecutor {
                     return false;
                 }
 
+                //if the regen is finished, attempt to relocate any pre-existing portals and set spawn next to the new portal
                 else {
-                    if (finishedRegen(sender, worldName)) {
-                        return fixedPortal(sender, worldName);
-                    }
-                    return false;
+                    return finishedRegen(sender, worldName);
                 }
             }
         }
@@ -66,7 +65,7 @@ public class ConfirmCommand implements CommandExecutor {
         //if confirm is typed in console within 15 seconds, get uuid that corresponds to the worldname and start the regen
         else if (sender instanceof ConsoleCommandSender) {
             if (args.length == 1 && regenQueue.containsWorldName(args[0])) {
-                return startRegen(sender, regenQueue.getWorldCode(args[0]).toString()) && finishedRegen(sender, args[0]) && fixedPortal(sender, args[0]);
+                return startRegen(sender, regenQueue.getWorldCode(args[0]).toString()) && finishedRegen(sender, args[0]);
             }
         }
         return false;
@@ -97,11 +96,12 @@ public class ConfirmCommand implements CommandExecutor {
             public void run() {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
+                    setSpawn(worldName, movePortal(sender, worldName));
                     sender.sendMessage(MessageWriter.doneRegenerating(worldName));
                     this.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 20L, 20L);
+        }.runTaskTimer(plugin, 100L, 20L);
 
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
             if (!unloadedWorldsChecker.isCancelled()) {
@@ -109,12 +109,16 @@ public class ConfirmCommand implements CommandExecutor {
                 plugin.getLogger().warning(MessageWriter.unknownRegenStatus(worldName));
             }
         }, 600L);
-
         return true;
     }
 
-    //check if there was a portal that needs to be re-made
-    private boolean fixedPortal(CommandSender sender, String worldName) {
+    //relocate potential portal and return y-level of the platform the portal is on
+    private double movePortal(CommandSender sender, String worldName) {
         return mvp.relocatePotentialPortal(sender, worldName);
+    }
+
+    private void setSpawn(String worldName, double spawnHeight) {
+        Location spawnLocation = new Location(Bukkit.getServer().getWorld(worldName), 3.0, spawnHeight, 1.0, -90.0F, 0.0F);
+        mv.setSpawn(worldName, spawnLocation);
     }
 }
