@@ -31,7 +31,7 @@ public class MVPortalsHandler {
 
         for (MVPortal portal : portals) {
             if (portal.getLocation().getMVWorld().getName().equalsIgnoreCase(worldName)) {
-                sender.sendMessage(MessageWriter.portalFound());
+                sender.sendMessage(MessageWriter.portalFound(portal.getName()));
                 plugin.getLogger().info("Portal \"" + portal.getName() + "\" found");
 
                 World world = Bukkit.getServer().getWorld(worldName);

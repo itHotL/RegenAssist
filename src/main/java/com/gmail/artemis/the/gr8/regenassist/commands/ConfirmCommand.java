@@ -5,6 +5,7 @@ import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -78,7 +79,7 @@ public class ConfirmCommand implements CommandExecutor {
         String resetGameRules = regenCandidate.getResetGameRules();
 
         //send message that regen is starting
-        sender.sendMessage(MessageWriter.startRegenerating(worldName));
+        sender.sendMessage(MessageWriter.startRegenerating());
 
         boolean useNewSeed = (seedOption.equalsIgnoreCase("random-seed") || seedOption.startsWith("supply-seed:"));
         boolean randomSeed = seedOption.equalsIgnoreCase("random-seed");
@@ -90,19 +91,20 @@ public class ConfirmCommand implements CommandExecutor {
     }
 
     //check every second if the world has been loaded again after regenerating
-    //stop + give feedback when the world has been loaded or after 30 seconds
+    //if so: stop, relocate portal if there is any, and give feedback when the world has been loaded
     private boolean finishedRegen(CommandSender sender, String worldName) {
         BukkitTask unloadedWorldsChecker = new BukkitRunnable() {
             public void run() {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
-                    setSpawn(worldName, movePortal(sender, worldName));
-                    sender.sendMessage(MessageWriter.doneRegenerating(worldName));
+                    double spawnHeight = mvp.relocatePotentialPortal(sender, worldName);
+                    sender.sendMessage(MessageWriter.doneRegenerating(worldName, setSpawn(worldName, spawnHeight)));
                     this.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 100L, 20L);
+        }.runTaskTimer(plugin, 20L, 20L);
 
+        //cancel the check if the world has not loaded yet after 30 seconds
         Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
             if (!unloadedWorldsChecker.isCancelled()) {
                 unloadedWorldsChecker.cancel();
@@ -112,13 +114,17 @@ public class ConfirmCommand implements CommandExecutor {
         return true;
     }
 
-    //relocate potential portal and return y-level of the platform the portal is on
-    private double movePortal(CommandSender sender, String worldName) {
-        return mvp.relocatePotentialPortal(sender, worldName);
-    }
+    //move the world spawn to the platform a portal was just printed on
+    private boolean setSpawn(String worldName, double spawnHeight) {
+        World world = Bukkit.getServer().getWorld(worldName);
+        if (world != null) {
+            Location spawnLocation = new Location(world, 3.0, spawnHeight, 1.0, -90.0F, 0.0F);
+            mv.setSpawn(worldName, spawnLocation);
+            return (world.getSpawnLocation().distance(spawnLocation)<1);
+        }
 
-    private void setSpawn(String worldName, double spawnHeight) {
-        Location spawnLocation = new Location(Bukkit.getServer().getWorld(worldName), 3.0, spawnHeight, 1.0, -90.0F, 0.0F);
-        mv.setSpawn(worldName, spawnLocation);
+        else {
+            return false;
+        }
     }
 }
