@@ -9,6 +9,8 @@ public final class MessageWriter {
     }
 
     public static String confirmCommand(String worldName, String uniqueRegenCmd, String timeSinceRegen) {
+
+        String msg = "{\"text\":\"You are about to regenerate world \",\"color\":\"white\"},{\"text\":\"\\\""+worldName+"\\\"\",\"color\":\"aqua\"},{\"text\":\". This world was last regenerated \",\"color\":\"white\"},{\"text\":\"[time]\",\"color\":\"gold\"},{\"text\":\" ago. To continue, click \",\"color\":\"white\"},{\"text\":\"[confirm]\",\"color\":\"dark_purple\"}";
         String time = (timeSinceRegen.equalsIgnoreCase("")) ? "" :
                 "{\"text\":\". This world was last regenerated \",\"color\":\"white\"}," +
                 "{\"text\":\"["+timeSinceRegen+"]\",\"color\":\"gold\"}," +
@@ -17,8 +19,8 @@ public final class MessageWriter {
         return " [\"\",{\"text\":\"[\",\"color\":\"gray\"}," +
                 "{\"text\":\"RegenAssist\",\"color\":\"gold\"}," +
                 "{\"text\":\"] \",\"color\":\"gray\"}," +
-                "{\"text\":\"You are about to regenerate the \",\"color\":\"white\"}," +
-                "{\"text\":\""+worldName+"\",\"color\":\"aqua\"}," +time+
+                "{\"text\":\"You are about to regenerate world \",\"color\":\"white\"}," +
+                "{\"text\":\"\\\""+worldName+"\\\"\",\"color\":\"aqua\"}," +time+
                 "{\"text\":\". To continue, click \",\"color\":\"white\"}," +
                 "{\"text\":\"[confirm]\",\"color\":\"dark_purple\"," +
                 "\"clickEvent\":{\"action\":\"run_command\",\"value\":\""+uniqueRegenCmd+"\"}," +
@@ -39,65 +41,87 @@ public final class MessageWriter {
     }
 
     public static String reloadedFiles() {
-        return ChatColor.GREEN + "Successfully reloaded all files!";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.GREEN + "Successfully reloaded all files!";
     }
 
     public static String reloadedSomeFiles(boolean reloadedConfig) {
         String basemsg = ChatColor.GOLD + "Some files failed to reload";
         String configmsg = reloadedConfig ? ". The config did reload though!" : ", including the config.";
 
-        return basemsg+configmsg;
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                basemsg+configmsg;
     }
 
     public static String notReloadedFiles() {
-        return ChatColor.RED + "Something went wrong and the files could not be reloaded.";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "Something went wrong and the files could not be reloaded.";
     }
 
     public static String alreadyRegenerating() {
-        return ChatColor.GOLD + "Someone else is already in the process of regenerating this world, please check again later!";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.GOLD + "Someone else is already in the process of regenerating this world, please check again later!";
     }
 
     public static String tooSlow() {
-        return ChatColor.GOLD + "You didn't click confirm fast enough, please repeat your command!";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.GOLD + "You didn't click confirm fast enough, please repeat your command!";
     }
 
     public static String missingName() {
-        return ChatColor.RED + "Please specify a world";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "Please specify a world";
     }
 
     public static String wrongName() {
-        return ChatColor.RED + "This world is not on RegenAssist's list. If you want to regenerate it, add it to the config and use /regenreload.";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "This world is not on RegenAssist's list. If you want to regenerate it, add it to the config and use /regenreload.";
     }
 
     public static String mainWorldWarning() {
-        return ChatColor.RED + "You cannot regenerate your main world! " + "\n" + "(Multiverse cannot unload it)";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "You cannot regenerate your main world! " + "\n" + "(Multiverse cannot unload it)";
     }
 
     public static String unknownWorld() {
-        return ChatColor.GOLD + "Unable to regen a world that does not exist!";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.GOLD + "Unable to regen a world that does not exist!";
     }
 
     public static String missingSeed() {
-        return ChatColor.RED + "If you want to supply your own seed, you do have to... you know... actually supply your own seed";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "If you want to supply your own seed, you do have to... you know... actually supply your own seed";
     }
 
     public static String missingSeedOption () {
-        return ChatColor.RED + "Please include an option for the seed";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "Please include an option for the seed";
     }
 
-    public static String startRegenerating(String worldName) {
-        return ChatColor.GREEN + "Starting the regeneration of the " + ChatColor.AQUA + worldName + ChatColor.GREEN + "...";
+    public static String startRegenerating() {
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.GREEN + "Regeneration starting...";
     }
 
-    public static String doneRegenerating(String worldName) {
-        return ChatColor.GREEN + "The " + ChatColor.AQUA + worldName + ChatColor.GREEN + " has been successfully regenerated!";
+    public static String portalFound(String portalName) {
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.GREEN + "Restoring portal " + ChatColor.BLUE + "\"" + portalName + "\"" + ChatColor.GREEN + "...";
+    }
+
+    public static String doneRegenerating(String worldName, boolean portalFixed) {
+        String portalIncluded = portalFixed ? " and the portal has been restored!" : "!";
+
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.GREEN + "World " + ChatColor.AQUA + "\"" + worldName + "\"" + ChatColor.GREEN + " has been regenerated" + portalIncluded;
     }
 
     public static String unknownRegenStatus(String worldName) {
-        return "Unable to confirm whether " + worldName + " has been regenerated.";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "Unable to confirm whether " + worldName + " has been regenerated.";
     }
 
     public static String unknownError(String worldName) {
-        return ChatColor.RED + "Something went wrong, and the " + worldName + " could not be regenerated.";
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "Something went wrong, and the " + worldName + " could not be regenerated.";
     }
 }

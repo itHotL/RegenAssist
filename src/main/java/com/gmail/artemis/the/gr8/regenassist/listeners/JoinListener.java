@@ -4,8 +4,8 @@ import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.PlayerFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
+import com.gmail.artemis.the.gr8.regenassist.utils.MVCoreHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
-import com.gmail.artemis.the.gr8.regenassist.utils.MultiverseHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.TimeHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,12 +18,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class JoinListener implements Listener {
 
     private final ConfigHandler config;
-    private final MultiverseHandler mv;
+    private final MVCoreHandler mv;
     private final PlayerFileHandler playerFile;
     private final RegenFileHandler regenFile;
     private final Main plugin;
 
-    public JoinListener(ConfigHandler c, MultiverseHandler m, PlayerFileHandler pl, RegenFileHandler r, Main p) {
+    public JoinListener(ConfigHandler c, MVCoreHandler m, PlayerFileHandler pl, RegenFileHandler r, Main p) {
         config = c;
         mv = m;
         playerFile = pl;
