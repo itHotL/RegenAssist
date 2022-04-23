@@ -17,53 +17,75 @@ public class MVPortalsHandler {
     private final MultiversePortals mvpAPI;
     private final PortalManager portalManager;
     private final Main plugin;
+    private String portalName = "";
 
-    public MVPortalsHandler(MultiversePortals mvph, PortalManager mvp, Main p) {
-        mvpAPI = mvph;
-        portalManager = mvp;
+    public MVPortalsHandler(MultiversePortals mvp, PortalManager pm, Main p) {
+        mvpAPI = mvp;
+        portalManager = pm;
         plugin = p;
     }
 
-    //check if there is a pre-existing portal, print a new portal structure, move the MVPortal to it
+    //check if there is a pre-existing portal, print a new portal structure, and move the MVPortal to it
     //return the y-level to set players to spawn at (or 500 if anything fails)
     public double relocatePotentialPortal (CommandSender sender, String worldName) {
-        List<MVPortal> portals = portalManager.getAllPortals();
+        if (portalManager != null) {
+            List<MVPortal> portals = portalManager.getAllPortals();
 
-        for (MVPortal portal : portals) {
-            if (portal.getLocation().getMVWorld().getName().equalsIgnoreCase(worldName)) {
-                sender.sendMessage(MessageWriter.portalFound(portal.getName()));
-                plugin.getLogger().info("Portal \"" + portal.getName() + "\" found");
+            for (MVPortal portal : portals) {
+                if (portal.getLocation().getMVWorld().getName().equalsIgnoreCase(worldName)) {
+                    portalName = portal.getName();
+                    sender.sendMessage(MessageWriter.portalFound(portalName));
+                    plugin.getLogger().info("Portal \"" + portalName + "\" found");
 
-                World world = Bukkit.getServer().getWorld(worldName);
-                if (world != null) {
-                    int platformHeight = createPortalStructure(world);
-                    int portalBottom = platformHeight+2;
-                    int portalTop = portalBottom+2;
-                    String mvportalLocation = "0.0," + portalBottom + ".0,0.0:0.0," + portalTop + ".0,1.0";
-                    portal.setPortalLocation(mvportalLocation, worldName);
-                    mvpAPI.savePortalsConfig();
-                    mvpAPI.reloadConfigs();
-                    return platformHeight+1;
+                    World world = Bukkit.getServer().getWorld(worldName);
+                    if (world != null) {
+                        int platformHeight = createPortalStructure(world);
+                        int portalBottom = platformHeight+2;
+                        int portalTop = portalBottom+2;
+                        String mvportalLocation = "0.0," + portalBottom + ".0,0.0:0.0," + portalTop + ".0,1.0";
+                        portal.setPortalLocation(mvportalLocation, worldName);
+                        plugin.getLogger().info("Saving new portal location to the Multiverse-Portals config and reloading config");
+                        mvpAPI.savePortalsConfig();
+                        mvpAPI.reloadConfigs();
+                        return platformHeight+1;
+                    }
                 }
             }
         }
         return 500;
     }
 
+    public String getPortalName() {
+        return portalName;
+    }
+
     //print all the different portal parts at spawn, and return the y level the platform has been printed on
     private int createPortalStructure(World world) {
-        int platformHeight = getHighestBlockAtSpawn(world);
+        int platformHeight = getHighestBlockSample(world);
         printPlatform(world, platformHeight);
+        //createSafeSpawnSpot(world, platformHeight);
         printPortalInside(world, platformHeight+2);
         printPortalFrame(world, platformHeight+1);
         return platformHeight;
     }
 
+    private int getHighestBlockSample(World world) {
+        int highest = 0;
+        for (int z = -2; z<= 3; z++) {
+            int y = world.getHighestBlockYAt(0, z);
+            if (y > highest) {
+                highest = y;
+            }
+        }
+        return highest;
+    }
+
+
     //check in a 8x8 radius around 0,0 what the highest block is
     private int getHighestBlockAtSpawn(World world) {
         int highest = 0;
-        for (int x = -3; x <= 4; x++) {
-            for (int z = -3; z <= 4; z++) {
+        for (int x = -3; x <= 3; x++) {
+            for (int z = -3; z <= 3; z++) {
                 int y = world.getHighestBlockYAt(x, z);
                 if (y > highest) {
                     highest = y;
@@ -82,11 +104,21 @@ public class MVPortalsHandler {
         }
     }
 
+    private void createSafeSpawnSpot(World world, int platformHeight) {
+        for (int y = platformHeight+1; y <= platformHeight+3; y++) {
+
+            world.setType(1, y, 0, Material.AIR);
+            world.setType(1, y, 1, Material.AIR);
+            world.setType(2, y, 0, Material.AIR);
+            world.setType(2, y, 1, Material.AIR);
+        }
+    }
+
     //print portal frame with x:0 and z:-1, 0, 1 and 2
     private void printPortalFrame(World world, int startHeight) {
         for (int z = -1; z <= 2; z++) {
             if (z == -1 || z == 2) {
-                for (int y = startHeight; y < startHeight+5; y++) {
+                for (int y = startHeight; y <= startHeight+4; y++) {
                     world.setType(0, y, z, Material.CRYING_OBSIDIAN);
                 }
             }

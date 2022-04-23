@@ -50,8 +50,7 @@ public class ConfirmCommand implements CommandExecutor {
             }
 
             else {
-                boolean regen = startRegen(sender, args[0]);
-                if (!regen) {
+                if (!startRegen(sender, args[0])) {
                     sender.sendMessage(MessageWriter.unknownError(worldName));
                     return false;
                 }
@@ -98,7 +97,7 @@ public class ConfirmCommand implements CommandExecutor {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
                     double spawnHeight = mvp.relocatePotentialPortal(sender, worldName);
-                    sender.sendMessage(MessageWriter.doneRegenerating(worldName, setSpawn(worldName, spawnHeight)));
+                    sender.sendMessage(MessageWriter.doneRegenerating(worldName, setSpawn(worldName, spawnHeight), mvp.getPortalName()));
                     this.cancel();
                 }
             }
@@ -114,11 +113,11 @@ public class ConfirmCommand implements CommandExecutor {
         return true;
     }
 
-    //move the world spawn to the platform a portal was just printed on
+    //move the world spawn to the platform if a portal+platform was just printed
     private boolean setSpawn(String worldName, double spawnHeight) {
         World world = Bukkit.getServer().getWorld(worldName);
-        if (world != null) {
-            Location spawnLocation = new Location(world, 3.0, spawnHeight, 1.0, -90.0F, 0.0F);
+        if (world != null && spawnHeight != 500) {
+            Location spawnLocation = new Location(world, 2.0, spawnHeight, 1.0, -90.0F, 0.0F);
             mv.setSpawn(worldName, spawnLocation);
             return (world.getSpawnLocation().distance(spawnLocation)<1);
         }

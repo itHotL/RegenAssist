@@ -16,9 +16,10 @@ public class ConfigHandler {
 
     public ConfigHandler(Main p) {
         plugin = p;
+        saveDefaultConfig();
     }
 
-
+    //create a config file if none exists yet (from the config.yml in the plugin's resources)
     public void saveDefaultConfig() {
         config = plugin.getConfig();
         plugin.saveDefaultConfig();

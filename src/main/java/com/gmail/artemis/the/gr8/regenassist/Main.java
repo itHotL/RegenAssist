@@ -23,14 +23,7 @@ import java.util.Collection;
 
 public class Main extends JavaPlugin {
 
-    private ConfigHandler config;
-    private MVCoreHandler mvCoreHandler;
-    private MVWorldManager worldManager;
-    private MVPortalsHandler mvPortalsHandler;
-    private PortalManager portalManager;
     private PlayerFileHandler playerFile;
-    private RegenFileHandler regenFile;
-    private RegenQueue regenQueue;
 
 
     @Override
@@ -38,27 +31,22 @@ public class Main extends JavaPlugin {
         //get an instance of the MVWorldManager from the Multiverse API and pass it on to the MVCoreHandler
         MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (core == null) {
-            getLogger().severe("Multiverse-Core not found, RegenAssist cannot live without it");
+            getLogger().severe("Multiverse-Core not found, RegenAssist is nothing without it");
             return;
         }
-        worldManager = core.getMVWorldManager();
-        mvCoreHandler = new MVCoreHandler(worldManager);
+        MVWorldManager worldManager = core.getMVWorldManager();
+        MVCoreHandler mvCoreHandler = new MVCoreHandler(worldManager);
 
         //if Multiverse-Portals is present, get an instance of the MVPortals API and pass it on to the MVPortalsHandler (might be null)
         MultiversePortals portals = (MultiversePortals) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Portals");
-        portalManager = (portals == null) ? null : portals.getPortalManager();
-        mvPortalsHandler = new MVPortalsHandler(portals, portalManager, this);
+        PortalManager portalManager = (portals == null) ? null : portals.getPortalManager();
+        MVPortalsHandler mvPortalsHandler = new MVPortalsHandler(portals, portalManager, this);
 
         //get an instance of all the classes that need to be instantiated
-        config = new ConfigHandler(this);
+        ConfigHandler config = new ConfigHandler(this);
         playerFile = new PlayerFileHandler(this);
-        regenFile = new RegenFileHandler(this);
-        regenQueue = new RegenQueue(this);
-
-        //create datafiles if none exist yet, and load them
-        config.saveDefaultConfig();
-        playerFile.loadFile();
-        regenFile.loadFile();
+        RegenFileHandler regenFile = new RegenFileHandler(this);
+        RegenQueue regenQueue = new RegenQueue(this);
 
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(config, mvCoreHandler, mvPortalsHandler, regenFile, regenQueue));

@@ -108,11 +108,12 @@ public final class MessageWriter {
                 ChatColor.GREEN + "Restoring portal " + ChatColor.BLUE + "\"" + portalName + "\"" + ChatColor.GREEN + "...";
     }
 
-    public static String doneRegenerating(String worldName, boolean portalFixed) {
-        String portalIncluded = portalFixed ? " and the portal has been restored!" : "!";
+    public static String doneRegenerating(String worldName, boolean portalFixed, String portalName) {
+        String pname = !portalName.equalsIgnoreCase("") ? ChatColor.BLUE + "\"" + portalName + "\"" + ChatColor.GREEN + " " : "";
+        String portalmsg = portalFixed ? " and portal " + pname  + "has been restored!" : "!";
 
         return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
-                ChatColor.GREEN + "World " + ChatColor.AQUA + "\"" + worldName + "\"" + ChatColor.GREEN + " has been regenerated" + portalIncluded;
+                ChatColor.GREEN + "World " + ChatColor.AQUA + "\"" + worldName + "\"" + ChatColor.GREEN + " has been regenerated" + portalmsg;
     }
 
     public static String unknownRegenStatus(String worldName) {

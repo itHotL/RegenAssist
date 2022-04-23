@@ -15,9 +15,10 @@ public class RegenFileHandler {
     private FileConfiguration regenConf;
     private final Main plugin;
 
-
+    //when the constructor is called, create a datafile if it does not exist yet (happens in onEnable)
     public RegenFileHandler(Main p) {
         plugin = p;
+        loadFile();
     }
 
 

@@ -14,8 +14,10 @@ public class PlayerFileHandler {
     private FileConfiguration playerConf;
     private final Main plugin;
 
+    //when the constructor is called, create a datafile if it does not exist yet (happens in onEnable)
     public PlayerFileHandler(Main p) {
         plugin = p;
+        loadFile();
     }
 
 
