@@ -15,20 +15,15 @@ public class MVPortalsHandler {
     private final PortalManager portalManager;
     private final Main plugin;
     private MVPortal portal;
-    private boolean createdNewPortalPlatform;
-    private int spawnPlatformY;
 
     public MVPortalsHandler(MultiversePortals mvp, PortalManager pm, Main p) {
         mvpAPI = mvp;
         portalManager = pm;
         plugin = p;
-
-        createdNewPortalPlatform = false;
     }
 
     //if a portal is present, select it by saving it as a private property and (re)setting createdNewPortalPlatform to false
     public boolean portalFound(String worldName) {
-        createdNewPortalPlatform = false;
         if (portalManager != null) {
             List<MVPortal> portals = portalManager.getAllPortals();
 
@@ -37,9 +32,6 @@ public class MVPortalsHandler {
                     portal = p;
                     return true;
                 }
-                else {
-                    portal = null;
-                }
             }
         }
         return false;
@@ -47,13 +39,11 @@ public class MVPortalsHandler {
 
     //print a new portal structure, and move the earlier found MVPortal to it
     //save the y-level to set players to spawn at as a private property
-    public boolean relocateFoundPortal(String worldName) {
+    public int relocateFoundPortal(String worldName) {
         if (portalManager != null && portal != null) {
             World world = Bukkit.getServer().getWorld(worldName);
             if (world != null) {
-                //--> get spawn area
-                createPortalStructure(world);
-
+                int spawnPlatformY = createPortalStructure(world);
                 int portalBottom = spawnPlatformY+2;
                 int portalTop = portalBottom+2;
                 String mvportalLocation = "0.0," + portalBottom + ".0,0.0:0.0," + portalTop + ".0,1.0";
@@ -61,38 +51,76 @@ public class MVPortalsHandler {
                 plugin.getLogger().info("Saving new portal location to the Multiverse-Portals config and reloading config");
                 mvpAPI.savePortalsConfig();
                 mvpAPI.reloadConfigs();
-                return true;
+                portal = null;
+                return spawnPlatformY+1;
             }
         }
-        return false;
+        return 500;
     }
 
-    //if a to-be-relocated portal has been found, this will return the name of said portal
-    public String getFoundPortalName() {
+    //if a to-be-relocated portal has been found (and has NOT been moved yet), this will return the name of said portal
+    public String getUnmovedFoundPortalName() {
         return portal != null ? portal.getName() : null;
     }
 
-    //returns the height of a newly created spawn-platform, or null if there is no spawn-platform created
-    public int getSpawnHeight() {
-        return createdNewPortalPlatform ? spawnPlatformY+1 : spawnPlatformY;
+    //load the chunks around (0,0), print all the different portal parts at spawn, and return the y level the platform has been printed on
+    private int createPortalStructure(World world) {
+        Location zero = new Location(world, 0, 0, 0);
+        plugin.getLogger().info("Distance from spawn to 0, 0, 0: " + world.getSpawnLocation().distance(zero));
+        plugin.getLogger().info("This is " + world.getSpawnLocation().distance(zero)/16 + " chunks away");
+
+        int spawnPlatformY;
+        if (world.hasCeiling()) {
+            plugin.getLogger().info("World " + world.getName() + " has a ceiling");
+            plugin.getLogger().info("It's sea level is: " + world.getSeaLevel());
+            plugin.getLogger().info("It's logical height is: " + world.getLogicalHeight());
+            plugin.getLogger().info("It's maximum height is: " + world.getMaxHeight());
+            plugin.getLogger().info("Does it have skylight access? " + world.hasSkyLight());
+
+            spawnPlatformY = world.getSpawnLocation().getBlockY()+1;
+
+        }
+        else {
+            if (world.hasSkyLight()) {
+                plugin.getLogger().info("World " + world.getName() + " has skylight access");
+            }
+            spawnPlatformY = getHighestBlockAtSpawn(world);
+            printPlatform(world, spawnPlatformY);
+            printPortalInside(world, spawnPlatformY+2);
+            printPortalFrame(world, spawnPlatformY+1);
+        }
+        return spawnPlatformY;
     }
 
-    //print all the different portal parts at spawn, and return the y level the platform has been printed on
-    private void createPortalStructure(World world) {
-        spawnPlatformY = getHighestBlockAtSpawn(world);
-        printPlatform(world, spawnPlatformY);
-        createdNewPortalPlatform = true;
+    private int getSafeSpawnLocation(World world) {
+        ChunkSnapshot spawnChunk = world.getChunkAt(0, 0).getChunkSnapshot();
 
-        printPortalInside(world, spawnPlatformY+2);
-        printPortalFrame(world, spawnPlatformY+1);
+        int highest = world.getLogicalHeight();
+        int y = world.getMinHeight();
+        while (y < highest) {
+            if (spawnChunk.getBlockType(0, y, 0).isSolid()) {
+                for (int i = y; i <= y+4; i++) {
+                    if (!spawnChunk.getBlockType(0, i, 0).isAir()) {
+                        //do something
+                    }
+                }
+                if (spawnChunk.getBlockType(0, y+1, 0).isAir() && spawnChunk.getBlockType(0, y+2, 0).isAir()) {
+
+                }
+            }
+            y=+5;
+        }
+
+        return 0;
     }
 
     //check in a 5x6 square around 0,0 what the highest block is
     private int getHighestBlockAtSpawn(World world) {
-        int highest = 0;
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 3; z++) {
-                int y = world.getHighestBlockYAt(x, z);
+        ChunkSnapshot spawnChunk = world.getChunkAt(0, 0).getChunkSnapshot();
+        int highest = world.getMinHeight();
+        for (int x = 0; x <= 6; x++) {
+            for (int z = 0; z <= 5; z++) {
+                int y = spawnChunk.getHighestBlockYAt(x, z);
                 if (y > highest) {
                     highest = y;
                 }

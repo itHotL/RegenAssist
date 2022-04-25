@@ -99,15 +99,17 @@ public class ConfirmCommand implements CommandExecutor {
             public void run() {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
+                    String foundPortalName = null;
+                    boolean fixedPortal = false;
+
                     if (config.restorePortal() && mvp.portalFound(worldName)) {
-                        String portalName = mvp.getFoundPortalName();
-                        sender.sendMessage(MessageWriter.portalFound(portalName));
-                        if (mvp.relocateFoundPortal(worldName)) {
-                            setSpawn(worldName, mvp.)
-                        }
+                        foundPortalName = mvp.getUnmovedFoundPortalName();
+                        sender.sendMessage(MessageWriter.portalFound(foundPortalName));
+                        int spawnHeight = mvp.relocateFoundPortal(worldName);
+                        fixedPortal = setSpawn(worldName, spawnHeight);
                     }
 
-                    sender.sendMessage(MessageWriter.doneRegenerating(worldName, setSpawn(worldName, spawnHeight), mvp.getFoundPortalName()));
+                    sender.sendMessage(MessageWriter.doneRegenerating(worldName, fixedPortal, foundPortalName));
                     this.cancel();
                 }
             }

@@ -17,15 +17,13 @@ public class RegenCommand implements CommandExecutor {
 
     private final ConfigHandler config;
     private final MVCoreHandler mv;
-    private final MVPortalsHandler mvp;
     private final RegenFileHandler regenFile;
     private final RegenQueue regenQueue;
 
-    public RegenCommand (ConfigHandler c, MVCoreHandler m, MVPortalsHandler mp, RegenFileHandler r, RegenQueue q) {
+    public RegenCommand (ConfigHandler c, MVCoreHandler m, RegenFileHandler r, RegenQueue q) {
 
         config = c;
         mv = m;
-        mvp = mp;
         regenFile = r;
         regenQueue = q;
     }

@@ -49,7 +49,7 @@ public class Main extends JavaPlugin {
         RegenQueue regenQueue = new RegenQueue(this);
 
         //set command executors and pass the relevant instances on
-        this.getCommand("regen").setExecutor(new RegenCommand(config, mvCoreHandler, mvPortalsHandler, regenFile, regenQueue));
+        this.getCommand("regen").setExecutor(new RegenCommand(config, mvCoreHandler, regenFile, regenQueue));
         this.getCommand("regen").setTabCompleter(new TabCompleter(config));
         this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(config, mvCoreHandler, mvPortalsHandler, regenFile, regenQueue, this));
         this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));
