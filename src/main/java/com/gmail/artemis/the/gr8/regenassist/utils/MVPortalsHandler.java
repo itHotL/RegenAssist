@@ -5,11 +5,8 @@ import com.onarandombox.MultiversePortals.MVPortal;
 import com.onarandombox.MultiversePortals.MultiversePortals;
 import com.onarandombox.MultiversePortals.utils.PortalManager;
 import org.bukkit.*;
-import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class MVPortalsHandler {
 
@@ -17,75 +14,84 @@ public class MVPortalsHandler {
     private final MultiversePortals mvpAPI;
     private final PortalManager portalManager;
     private final Main plugin;
-    private String portalName = "";
+    private MVPortal portal;
+    private boolean createdNewPortalPlatform;
+    private int spawnPlatformY;
 
     public MVPortalsHandler(MultiversePortals mvp, PortalManager pm, Main p) {
         mvpAPI = mvp;
         portalManager = pm;
         plugin = p;
+
+        createdNewPortalPlatform = false;
     }
 
-    //check if there is a pre-existing portal, print a new portal structure, and move the MVPortal to it
-    //return the y-level to set players to spawn at (or 500 if anything fails)
-    public double relocatePotentialPortal (CommandSender sender, String worldName) {
+    //if a portal is present, select it by saving it as a private property and (re)setting createdNewPortalPlatform to false
+    public boolean portalFound(String worldName) {
+        createdNewPortalPlatform = false;
         if (portalManager != null) {
             List<MVPortal> portals = portalManager.getAllPortals();
 
-            for (MVPortal portal : portals) {
-                if (portal.getLocation().getMVWorld().getName().equalsIgnoreCase(worldName)) {
-                    portalName = portal.getName();
-                    sender.sendMessage(MessageWriter.portalFound(portalName));
-                    plugin.getLogger().info("Portal \"" + portalName + "\" found");
-
-                    World world = Bukkit.getServer().getWorld(worldName);
-                    if (world != null) {
-                        int platformHeight = createPortalStructure(world);
-                        int portalBottom = platformHeight+2;
-                        int portalTop = portalBottom+2;
-                        String mvportalLocation = "0.0," + portalBottom + ".0,0.0:0.0," + portalTop + ".0,1.0";
-                        portal.setPortalLocation(mvportalLocation, worldName);
-                        plugin.getLogger().info("Saving new portal location to the Multiverse-Portals config and reloading config");
-                        mvpAPI.savePortalsConfig();
-                        mvpAPI.reloadConfigs();
-                        return platformHeight+1;
-                    }
+            for (MVPortal p : portals) {
+                if (p.getLocation().getMVWorld().getName().equalsIgnoreCase(worldName)) {
+                    portal = p;
+                    return true;
+                }
+                else {
+                    portal = null;
                 }
             }
         }
-        return 500;
+        return false;
     }
 
-    public String getPortalName() {
-        return portalName;
+    //print a new portal structure, and move the earlier found MVPortal to it
+    //save the y-level to set players to spawn at as a private property
+    public boolean relocateFoundPortal(String worldName) {
+        if (portalManager != null && portal != null) {
+            World world = Bukkit.getServer().getWorld(worldName);
+            if (world != null) {
+                //--> get spawn area
+                createPortalStructure(world);
+
+                int portalBottom = spawnPlatformY+2;
+                int portalTop = portalBottom+2;
+                String mvportalLocation = "0.0," + portalBottom + ".0,0.0:0.0," + portalTop + ".0,1.0";
+                portal.setPortalLocation(mvportalLocation, worldName);
+                plugin.getLogger().info("Saving new portal location to the Multiverse-Portals config and reloading config");
+                mvpAPI.savePortalsConfig();
+                mvpAPI.reloadConfigs();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //if a to-be-relocated portal has been found, this will return the name of said portal
+    public String getFoundPortalName() {
+        return portal != null ? portal.getName() : null;
+    }
+
+    //returns the height of a newly created spawn-platform, or null if there is no spawn-platform created
+    public int getSpawnHeight() {
+        return createdNewPortalPlatform ? spawnPlatformY+1 : spawnPlatformY;
     }
 
     //print all the different portal parts at spawn, and return the y level the platform has been printed on
-    private int createPortalStructure(World world) {
-        int platformHeight = getHighestBlockSample(world);
-        printPlatform(world, platformHeight);
-        //createSafeSpawnSpot(world, platformHeight);
-        printPortalInside(world, platformHeight+2);
-        printPortalFrame(world, platformHeight+1);
-        return platformHeight;
+    private void createPortalStructure(World world) {
+        spawnPlatformY = getHighestBlockAtSpawn(world);
+        printPlatform(world, spawnPlatformY);
+        createdNewPortalPlatform = true;
+
+        printPortalInside(world, spawnPlatformY+2);
+        printPortalFrame(world, spawnPlatformY+1);
     }
 
-    private int getHighestBlockSample(World world) {
-        int highest = 0;
-        for (int z = -2; z<= 3; z++) {
-            int y = world.getHighestBlockYAt(0, z);
-            if (y > highest) {
-                highest = y;
-            }
-        }
-        return highest;
-    }
-
-
-    //check in a 8x8 radius around 0,0 what the highest block is
+    //check in a 5x6 square around 0,0 what the highest block is
     private int getHighestBlockAtSpawn(World world) {
         int highest = 0;
-        for (int x = -3; x <= 3; x++) {
-            for (int z = -3; z <= 3; z++) {
+        for (int x = -2; x <= 2; x++) {
+            for (int z = -2; z <= 3; z++) {
                 int y = world.getHighestBlockYAt(x, z);
                 if (y > highest) {
                     highest = y;
@@ -101,16 +107,6 @@ public class MVPortalsHandler {
             for (int z = -2; z <= 3; z++) {
                 world.setType(x, y, z, Material.QUARTZ_BLOCK);
             }
-        }
-    }
-
-    private void createSafeSpawnSpot(World world, int platformHeight) {
-        for (int y = platformHeight+1; y <= platformHeight+3; y++) {
-
-            world.setType(1, y, 0, Material.AIR);
-            world.setType(1, y, 1, Material.AIR);
-            world.setType(2, y, 0, Material.AIR);
-            world.setType(2, y, 1, Material.AIR);
         }
     }
 

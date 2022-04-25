@@ -19,11 +19,20 @@ public class ConfigHandler {
         saveDefaultConfig();
     }
 
-    //create a config file if none exists yet (from the config.yml in the plugin's resources)
-    public void saveDefaultConfig() {
-        config = plugin.getConfig();
-        plugin.saveDefaultConfig();
-        configFile = new File(plugin.getDataFolder(), "config.yml");
+    public boolean restorePortal() {
+        return config.getBoolean("restore portal");
+    }
+
+    public String getMainWorldName() {
+        return config.getString("main world");
+    }
+
+    public String getSpawnWorldName() {
+        return config.getString("spawnworld");
+    }
+
+    public List<String> getWorldList() {
+        return config.getStringList("worlds");
     }
 
     //reload data from file (called in ReloadCommand)
@@ -38,15 +47,10 @@ public class ConfigHandler {
         }
     }
 
-    public String getMainWorldName() {
-        return config.getString("main world");
-    }
-
-    public String getSpawnWorldName() {
-        return config.getString("spawnworld");
-    }
-
-    public List<String> getWorldList() {
-        return config.getStringList("worlds");
+    //create a config file if none exists yet (from the config.yml in the plugin's resources)
+    private void saveDefaultConfig() {
+        config = plugin.getConfig();
+        plugin.saveDefaultConfig();
+        configFile = new File(plugin.getDataFolder(), "config.yml");
     }
 }

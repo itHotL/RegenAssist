@@ -1,6 +1,7 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
+import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 public class ConfirmCommand implements CommandExecutor {
 
+    private final ConfigHandler config;
     private final MVCoreHandler mv;
     private final MVPortalsHandler mvp;
     private final RegenFileHandler regenFile;
@@ -26,8 +28,9 @@ public class ConfirmCommand implements CommandExecutor {
     private final Main plugin;
     private String worldName;
 
-    public ConfirmCommand (MVCoreHandler m, MVPortalsHandler mp, RegenFileHandler r, RegenQueue q, Main p) {
+    public ConfirmCommand (ConfigHandler c, MVCoreHandler m, MVPortalsHandler mp, RegenFileHandler r, RegenQueue q, Main p) {
 
+        config = c;
         mv = m;
         mvp = mp;
         regenFile = r;
@@ -96,8 +99,15 @@ public class ConfirmCommand implements CommandExecutor {
             public void run() {
                 if (!mv.getUnloadedWorlds().contains(worldName)) {
                     regenFile.writeToFile(worldName, TimeHandler.getCurrentTime());
-                    double spawnHeight = mvp.relocatePotentialPortal(sender, worldName);
-                    sender.sendMessage(MessageWriter.doneRegenerating(worldName, setSpawn(worldName, spawnHeight), mvp.getPortalName()));
+                    if (config.restorePortal() && mvp.portalFound(worldName)) {
+                        String portalName = mvp.getFoundPortalName();
+                        sender.sendMessage(MessageWriter.portalFound(portalName));
+                        if (mvp.relocateFoundPortal(worldName)) {
+                            setSpawn(worldName, mvp.)
+                        }
+                    }
+
+                    sender.sendMessage(MessageWriter.doneRegenerating(worldName, setSpawn(worldName, spawnHeight), mvp.getFoundPortalName()));
                     this.cancel();
                 }
             }
@@ -114,7 +124,7 @@ public class ConfirmCommand implements CommandExecutor {
     }
 
     //move the world spawn to the platform if a portal+platform was just printed
-    private boolean setSpawn(String worldName, double spawnHeight) {
+    private boolean setSpawn(String worldName, int spawnHeight) {
         World world = Bukkit.getServer().getWorld(worldName);
         if (world != null && spawnHeight != 500) {
             Location spawnLocation = new Location(world, 2.0, spawnHeight, 1.0, -90.0F, 0.0F);

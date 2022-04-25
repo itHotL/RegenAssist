@@ -51,7 +51,7 @@ public class Main extends JavaPlugin {
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(config, mvCoreHandler, mvPortalsHandler, regenFile, regenQueue));
         this.getCommand("regen").setTabCompleter(new TabCompleter(config));
-        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(mvCoreHandler, mvPortalsHandler, regenFile, regenQueue, this));
+        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(config, mvCoreHandler, mvPortalsHandler, regenFile, regenQueue, this));
         this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));
 
         //register the Listeners
