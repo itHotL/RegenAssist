@@ -23,6 +23,10 @@ public class ConfigHandler {
         return config.getBoolean("restore portal");
     }
 
+    public boolean useVanillaSpawn() {
+        return config.getBoolean("use vanilla spawn");
+    }
+
     public String getMainWorldName() {
         return config.getString("main world");
     }

@@ -105,7 +105,7 @@ public class ConfirmCommand implements CommandExecutor {
                     if (config.restorePortal() && mvp.portalFound(worldName)) {
                         foundPortalName = mvp.getUnmovedFoundPortalName();
                         sender.sendMessage(MessageWriter.portalFound(foundPortalName));
-                        int spawnHeight = mvp.relocateFoundPortal(worldName);
+                        int spawnHeight = mvp.relocateFoundPortal(worldName, config.useVanillaSpawn());
                         fixedPortal = setSpawn(worldName, spawnHeight);
                     }
 

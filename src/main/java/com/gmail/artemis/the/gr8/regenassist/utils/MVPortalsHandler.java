@@ -5,6 +5,7 @@ import com.onarandombox.MultiversePortals.MVPortal;
 import com.onarandombox.MultiversePortals.MultiversePortals;
 import com.onarandombox.MultiversePortals.utils.PortalManager;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 
 import java.util.List;
 
@@ -39,14 +40,14 @@ public class MVPortalsHandler {
 
     //print a new portal structure, and move the earlier found MVPortal to it
     //save the y-level to set players to spawn at as a private property
-    public int relocateFoundPortal(String worldName) {
+    public int relocateFoundPortal(String worldName, boolean useVanillaSpawn) {
         if (portalManager != null && portal != null) {
             World world = Bukkit.getServer().getWorld(worldName);
             if (world != null) {
-                int spawnPlatformY = createPortalStructure(world);
+                int spawnPlatformY = createPortalStructure(world, useVanillaSpawn);
                 int portalBottom = spawnPlatformY+2;
                 int portalTop = portalBottom+2;
-                String mvportalLocation = "0.0," + portalBottom + ".0,0.0:0.0," + portalTop + ".0,1.0";
+                String mvportalLocation = "2.0," + portalBottom + ".0,3.0:3.0," + portalTop + ".0,3.0";
                 portal.setPortalLocation(mvportalLocation, worldName);
                 plugin.getLogger().info("Saving new portal location to the Multiverse-Portals config and reloading config");
                 mvpAPI.savePortalsConfig();
@@ -64,60 +65,87 @@ public class MVPortalsHandler {
     }
 
     //load the chunks around (0,0), print all the different portal parts at spawn, and return the y level the platform has been printed on
-    private int createPortalStructure(World world) {
+    private int createPortalStructure(World world, boolean useVanillaSpawn) {
         Location zero = new Location(world, 0, 0, 0);
         plugin.getLogger().info("Distance from spawn to 0, 0, 0: " + world.getSpawnLocation().distance(zero));
         plugin.getLogger().info("This is " + world.getSpawnLocation().distance(zero)/16 + " chunks away");
 
-        int spawnPlatformY;
-        if (world.hasCeiling()) {
-            plugin.getLogger().info("World " + world.getName() + " has a ceiling");
-            plugin.getLogger().info("It's sea level is: " + world.getSeaLevel());
-            plugin.getLogger().info("It's logical height is: " + world.getLogicalHeight());
-            plugin.getLogger().info("It's maximum height is: " + world.getMaxHeight());
-            plugin.getLogger().info("Does it have skylight access? " + world.hasSkyLight());
+        plugin.getLogger().info("WorldName: " + world.getName());
+        plugin.getLogger().info("Highest Motion_Blocking: " + world.getHighestBlockAt(0, 0, HeightMap.MOTION_BLOCKING).getType() + " at: " + world.getHighestBlockYAt(0, 0, HeightMap.MOTION_BLOCKING));
+        plugin.getLogger().info("Highest Motion_Blocking_No_Leaves: " + world.getHighestBlockAt(0, 0, HeightMap.MOTION_BLOCKING_NO_LEAVES).getType() + " at: " + world.getHighestBlockYAt(0, 0, HeightMap.MOTION_BLOCKING_NO_LEAVES));
+        plugin.getLogger().info("Highest Ocean_Floor: " + world.getHighestBlockAt(0, 0, HeightMap.OCEAN_FLOOR).getType() + " at: " + world.getHighestBlockYAt(0, 0, HeightMap.OCEAN_FLOOR));
+        plugin.getLogger().info("Highest Ocean_Floor_World_Gen: " + world.getHighestBlockAt(0, 0, HeightMap.OCEAN_FLOOR_WG).getType() + " at: " + world.getHighestBlockYAt(0, 0, HeightMap.OCEAN_FLOOR_WG));
+        plugin.getLogger().info("Highest World_Surface: " + world.getHighestBlockAt(0, 0, HeightMap.WORLD_SURFACE).getType() + " at: " + world.getHighestBlockYAt(0, 0, HeightMap.WORLD_SURFACE));
+        plugin.getLogger().info("Highest World_Surface_World_Gen: " + world.getHighestBlockAt(0, 0, HeightMap.WORLD_SURFACE_WG).getType() + " at: " + world.getHighestBlockYAt(0, 0, HeightMap.WORLD_SURFACE_WG));
+        plugin.getLogger().info("Does it have a clealing? " + world.hasCeiling());
+        plugin.getLogger().info("It's sea level is: " + world.getSeaLevel());
+        plugin.getLogger().info("It's logical height is: " + world.getLogicalHeight());
+        plugin.getLogger().info("It's maximum height is: " + world.getMaxHeight());
+        plugin.getLogger().info("Does it have skylight access? " + world.hasSkyLight());
 
-            spawnPlatformY = world.getSpawnLocation().getBlockY()+1;
+        int spawnPlatformY = getSpawnPlatformY(world, useVanillaSpawn);
+        printPlatform(world, spawnPlatformY);
+        printPortalInside(world, spawnPlatformY+2);
+        printPortalFrame(world, spawnPlatformY+1);
 
-        }
-        else {
-            if (world.hasSkyLight()) {
-                plugin.getLogger().info("World " + world.getName() + " has skylight access");
-            }
-            spawnPlatformY = getHighestBlockAtSpawn(world);
-            printPlatform(world, spawnPlatformY);
-            printPortalInside(world, spawnPlatformY+2);
-            printPortalFrame(world, spawnPlatformY+1);
-        }
         return spawnPlatformY;
     }
 
-    private int getSafeSpawnLocation(World world) {
-        ChunkSnapshot spawnChunk = world.getChunkAt(0, 0).getChunkSnapshot();
 
-        int highest = world.getLogicalHeight();
-        int y = world.getMinHeight();
-        while (y < highest) {
-            if (spawnChunk.getBlockType(0, y, 0).isSolid()) {
-                for (int i = y; i <= y+4; i++) {
-                    if (!spawnChunk.getBlockType(0, i, 0).isAir()) {
-                        //do something
+    private int getSpawnPlatformY(World world, boolean useVanillaSpawn) {
+
+        //get corner coordinates of the chunk spawn is in
+        int spawnX = useVanillaSpawn ? (int)Math.floor(world.getSpawnLocation().getX()/16) : 0;
+        int spawnZ = useVanillaSpawn ? (int)Math.floor(world.getSpawnLocation().getZ()/16) : 0;
+        int spawnY = 500;
+
+        //get world max and min y levels
+        int maxY = world.getHighestBlockYAt(spawnX, spawnZ);
+        int minY = world.getMinHeight();
+
+        ChunkSnapshot spawnChunk = world.getChunkAt(spawnX, spawnZ).getChunkSnapshot(true, false, false);
+        if (world.hasCeiling()) {
+
+            //check in 3x4 square if location is safe
+            for (int y = minY; y < maxY; y++) {
+                for (int x = spawnX; x <= spawnX+2; x++) {
+                    for (int z= spawnZ; z <= spawnZ+3; z++) {
+                        Material block = spawnChunk.getBlockType(x, y, z);
+                        if (block.isSolid() || block.equals(Material.WATER) || block.equals(Material.LAVA)) {
+                            if (spawnChunk.getBlockType(x, y+1, z).isAir() &&
+                                    spawnChunk.getBlockType(x, y+2, z).isAir() &&
+                                    spawnChunk.getBlockType(x, y+3, z).isAir() &&
+                                    spawnChunk.getBlockType(x, y+4, z).isAir()) {
+                                spawnY = y;
+                                break;
+                            }
+                        }
                     }
                 }
-                if (spawnChunk.getBlockType(0, y+1, 0).isAir() && spawnChunk.getBlockType(0, y+2, 0).isAir()) {
-
-                }
             }
-            y=+5;
         }
 
-        return 0;
+        else if (world.hasSkyLight()) {
+            spawnY = getHighestBlockY(spawnChunk, minY);
+        }
+
+        else {
+            if (world.getEnvironment().equals(World.Environment.NETHER)) {
+                spawnY = 31;
+            }
+
+            else if (world.getEnvironment().equals(World.Environment.THE_END)) {
+                spawnY = spawnChunk.getHighestBlockYAt(0, 0) + 3;
+            }
+        }
+
+       return spawnY;
     }
 
     //check in a 5x6 square around 0,0 what the highest block is
-    private int getHighestBlockAtSpawn(World world) {
-        ChunkSnapshot spawnChunk = world.getChunkAt(0, 0).getChunkSnapshot();
-        int highest = world.getMinHeight();
+    private int getHighestBlockY(ChunkSnapshot spawnChunk, int worldMinY) {
+
+        int highest = worldMinY;
         for (int x = 0; x <= 6; x++) {
             for (int z = 0; z <= 5; z++) {
                 int y = spawnChunk.getHighestBlockYAt(x, z);
@@ -131,8 +159,8 @@ public class MVPortalsHandler {
 
     //print an 8x8 platform underneath the portal
     private void printPlatform(World world, int y) {
-        for (int x = -3; x <= 3; x++) {
-            for (int z = -2; z <= 3; z++) {
+        for (int x = 0; x <= 6; x++) {
+            for (int z = 0; z <= 5; z++) {
                 world.setType(x, y, z, Material.QUARTZ_BLOCK);
             }
         }
@@ -140,28 +168,28 @@ public class MVPortalsHandler {
 
     //print portal frame with x:0 and z:-1, 0, 1 and 2
     private void printPortalFrame(World world, int startHeight) {
-        for (int z = -1; z <= 2; z++) {
-            if (z == -1 || z == 2) {
+        for (int z = 1; z <= 4; z++) {
+            if (z == 1 || z == 4) {
                 for (int y = startHeight; y <= startHeight+4; y++) {
-                    world.setType(0, y, z, Material.CRYING_OBSIDIAN);
+                    world.setType(3, y, z, Material.CRYING_OBSIDIAN);
                 }
             }
 
-            if (z == 0 || z == 1) {
-                world.setType(0, startHeight, z, Material.CRYING_OBSIDIAN);
-                world.setType(0, startHeight+4, z, Material.CRYING_OBSIDIAN);
+            if (z == 2 || z == 3) {
+                world.setType(3, startHeight, z, Material.CRYING_OBSIDIAN);
+                world.setType(3, startHeight+4, z, Material.CRYING_OBSIDIAN);
             }
         }
     }
 
-    //print the inside of the portal with x:0 and z:0-1
+    //print the inside of the portal with x:3 and z:2-3
     private void printPortalInside(World world, int startHeight) {
-        world.setType(0, startHeight, 0, Material.PURPLE_STAINED_GLASS_PANE);
-        world.setType(0, startHeight+1, 0, Material.PURPLE_STAINED_GLASS_PANE);
-        world.setType(0, startHeight+2, 0, Material.PURPLE_STAINED_GLASS_PANE);
+        world.setType(3, startHeight, 2, Material.PURPLE_STAINED_GLASS_PANE);
+        world.setType(3, startHeight+1, 2, Material.PURPLE_STAINED_GLASS_PANE);
+        world.setType(3, startHeight+2, 2, Material.PURPLE_STAINED_GLASS_PANE);
 
-        world.setType(0, startHeight, 1, Material.PURPLE_STAINED_GLASS_PANE);
-        world.setType(0, startHeight+1, 1, Material.PURPLE_STAINED_GLASS_PANE);
-        world.setType(0, startHeight+2, 1, Material.PURPLE_STAINED_GLASS_PANE);
+        world.setType(3, startHeight, 3, Material.PURPLE_STAINED_GLASS_PANE);
+        world.setType(3, startHeight+1, 3, Material.PURPLE_STAINED_GLASS_PANE);
+        world.setType(3, startHeight+2, 3, Material.PURPLE_STAINED_GLASS_PANE);
     }
 }
