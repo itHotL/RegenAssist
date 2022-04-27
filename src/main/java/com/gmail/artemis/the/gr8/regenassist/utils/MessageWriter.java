@@ -109,6 +109,11 @@ public final class MessageWriter {
                 ChatColor.GREEN + "Restoring portal " + pname + "...";
     }
 
+    public static String portalError() {
+        return ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RED + "Something went wrong, and the portal could not be moved.";
+    }
+
     public static String doneRegenerating(String worldName, boolean portalFixed, String portalName) {
         String pname = portalName != null ? ChatColor.BLUE + "\"" + portalName + "\"" + ChatColor.GREEN + " " : "";
         String portalmsg = portalFixed ? " and portal " + pname  + "has been restored!" : "!";

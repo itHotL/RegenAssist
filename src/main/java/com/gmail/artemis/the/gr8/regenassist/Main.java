@@ -28,6 +28,12 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        //get an instance of all the classes that need to be instantiated
+        ConfigHandler config = new ConfigHandler(this);
+        playerFile = new PlayerFileHandler(this);
+        RegenFileHandler regenFile = new RegenFileHandler(this);
+        RegenQueue regenQueue = new RegenQueue(this);
+
         //get an instance of the MVWorldManager from the Multiverse API and pass it on to the MVCoreHandler
         MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (core == null) {
@@ -40,13 +46,7 @@ public class Main extends JavaPlugin {
         //if Multiverse-Portals is present, get an instance of the MVPortals API and pass it on to the MVPortalsHandler (might be null)
         MultiversePortals portals = (MultiversePortals) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Portals");
         PortalManager portalManager = (portals == null) ? null : portals.getPortalManager();
-        MVPortalsHandler mvPortalsHandler = new MVPortalsHandler(portals, portalManager, this);
-
-        //get an instance of all the classes that need to be instantiated
-        ConfigHandler config = new ConfigHandler(this);
-        playerFile = new PlayerFileHandler(this);
-        RegenFileHandler regenFile = new RegenFileHandler(this);
-        RegenQueue regenQueue = new RegenQueue(this);
+        MVPortalsHandler mvPortalsHandler = new MVPortalsHandler(config, portals, portalManager, this);
 
         //set command executors and pass the relevant instances on
         this.getCommand("regen").setExecutor(new RegenCommand(config, mvCoreHandler, regenFile, regenQueue));

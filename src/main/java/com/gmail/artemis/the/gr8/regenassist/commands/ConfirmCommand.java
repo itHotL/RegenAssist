@@ -5,8 +5,6 @@ import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -103,10 +101,12 @@ public class ConfirmCommand implements CommandExecutor {
                     boolean fixedPortal = false;
 
                     if (config.restorePortal() && mvp.portalFound(worldName)) {
-                        foundPortalName = mvp.getUnmovedFoundPortalName();
+                        foundPortalName = mvp.getFoundPortalName();
                         sender.sendMessage(MessageWriter.portalFound(foundPortalName));
-                        int spawnHeight = mvp.relocateFoundPortal(worldName, config.useVanillaSpawn());
-                        fixedPortal = setSpawn(worldName, spawnHeight);
+                        fixedPortal = mvp.relocateFoundPortal(worldName);
+                        if (!fixedPortal) {
+                            sender.sendMessage(MessageWriter.portalError());
+                        }
                     }
 
                     sender.sendMessage(MessageWriter.doneRegenerating(worldName, fixedPortal, foundPortalName));
@@ -126,10 +126,10 @@ public class ConfirmCommand implements CommandExecutor {
     }
 
     //move the world spawn to the platform if a portal+platform was just printed
-    private boolean setSpawn(String worldName, int spawnHeight) {
+    /* private boolean setSpawn(Location spawnLocation) {
         World world = Bukkit.getServer().getWorld(worldName);
-        if (world != null && spawnHeight != 500) {
-            Location spawnLocation = new Location(world, 2.0, spawnHeight, 1.0, -90.0F, 0.0F);
+        if (world != null && !(world.getSpawnLocation().distance(spawnLocation)<1)) {
+            Location spawnLocation = new Location(world, 2.0, platformY+1, 1.0, -90.0F, 0.0F);
             mv.setSpawn(worldName, spawnLocation);
             return (world.getSpawnLocation().distance(spawnLocation)<1);
         }
@@ -137,5 +137,5 @@ public class ConfirmCommand implements CommandExecutor {
         else {
             return false;
         }
-    }
+    } */
 }

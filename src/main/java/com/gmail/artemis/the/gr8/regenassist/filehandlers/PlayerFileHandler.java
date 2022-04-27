@@ -45,6 +45,9 @@ public class PlayerFileHandler {
     //reload data from file (called in ReloadCommand)
     public boolean reloadFile() {
         try {
+            if (!playerFile.exists()) {
+                loadFile();
+            }
             playerConf = YamlConfiguration.loadConfiguration(playerFile);
             return true;
         }

@@ -2,6 +2,7 @@ com\gmail\artemis\the\gr8\regenassist\utils\TimeHandler.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\RegenFileHandler.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\ConfigHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\JoinListener.class
+com\gmail\artemis\the\gr8\regenassist\utils\PortalCandidate.class
 com\gmail\artemis\the\gr8\regenassist\utils\MVPortalsHandler.class
 com\gmail\artemis\the\gr8\regenassist\listeners\QuitListener.class
 com\gmail\artemis\the\gr8\regenassist\filehandlers\PlayerFileHandler.class

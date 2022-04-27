@@ -1,6 +1,8 @@
 package com.gmail.artemis.the.gr8.regenassist.filehandlers;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -19,6 +21,14 @@ public class ConfigHandler {
         saveDefaultConfig();
     }
 
+    public List<String> getWorldList() {
+        return config.getStringList("worlds");
+    }
+
+    public String getSpawnWorldName() {
+        return config.getString("spawnworld");
+    }
+
     public boolean restorePortal() {
         return config.getBoolean("restore portal");
     }
@@ -27,21 +37,32 @@ public class ConfigHandler {
         return config.getBoolean("use vanilla spawn");
     }
 
+    public String getPortalPlatformBlock(World.Environment environment) {
+        ConfigurationSection platformBlock = config.getConfigurationSection("platform");
+        return (platformBlock != null) ? platformBlock.getString(environment.name().toLowerCase()) : "";
+    }
+
+    public String getPortalFrameBlock(World.Environment environment) {
+        ConfigurationSection frameBlock = config.getConfigurationSection("portal frame");
+        return (frameBlock != null) ? frameBlock.getString(environment.name().toLowerCase()) : "";
+    }
+
+    public String getPortalInsideBlock(World.Environment environment) {
+        ConfigurationSection insideBlock = config.getConfigurationSection("portal inside");
+        return (insideBlock != null) ? insideBlock.getString(environment.name().toLowerCase()) : "";
+    }
+
     public String getMainWorldName() {
         return config.getString("main world");
     }
 
-    public String getSpawnWorldName() {
-        return config.getString("spawnworld");
-    }
-
-    public List<String> getWorldList() {
-        return config.getStringList("worlds");
-    }
 
     //reload data from file (called in ReloadCommand)
     public boolean reloadFile() {
         try {
+            if (!configFile.exists()) {
+                saveDefaultConfig();
+            }
             config = YamlConfiguration.loadConfiguration(configFile);
             return true;
         }

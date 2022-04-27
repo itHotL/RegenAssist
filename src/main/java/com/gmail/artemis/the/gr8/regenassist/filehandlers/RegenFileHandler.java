@@ -21,7 +21,6 @@ public class RegenFileHandler {
         loadFile();
     }
 
-
     //load the datafile that will store regen-data (called in onEnable)
     public void loadFile() {
 
@@ -46,6 +45,9 @@ public class RegenFileHandler {
     //reload data from file (called in ReloadCommand)
     public boolean reloadFile() {
         try {
+            if (!regenFile.exists()) {
+                loadFile();
+            }
             regenConf = YamlConfiguration.loadConfiguration(regenFile);
             return true;
         }
