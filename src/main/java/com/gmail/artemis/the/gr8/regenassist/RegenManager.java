@@ -3,7 +3,7 @@ package com.gmail.artemis.the.gr8.regenassist;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.portal.MyPortalManager;
-import com.gmail.artemis.the.gr8.regenassist.portal.PortalRelocationResult;
+import com.gmail.artemis.the.gr8.regenassist.portal.PortalResult;
 import com.gmail.artemis.the.gr8.regenassist.regen.MVCoreHandler;
 import com.gmail.artemis.the.gr8.regenassist.regen.RegenCandidate;
 import com.gmail.artemis.the.gr8.regenassist.regen.RegenQueue;
@@ -96,12 +96,12 @@ public class RegenManager {
                     boolean fixedPortal = false;
                     String portalName = null;
                     if (config.restorePortal()) {
-                        portalName = myPortalManager.getMVPortalName(worldName);
-                        if (portalName != null) {
-                            sender.sendMessage(MessageWriter.portalFound(portalName));
-                            PortalRelocationResult portal = myPortalManager.relocateFoundPortal(worldName, portalName);
+                        if (myPortalManager.hasMVPortal(worldName)) {
+                            sender.sendMessage(MessageWriter.portalFound());
+                            PortalResult portal = myPortalManager.fixPotentialPortal(worldName);
                             if (portal != null) {
                                 fixedPortal = true;
+                                portalName = portal.getPortalName();
                                 mv.setSpawn(worldName, portal.getSpawnLocation());
                             }
                         }

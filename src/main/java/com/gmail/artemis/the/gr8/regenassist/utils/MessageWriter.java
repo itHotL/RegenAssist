@@ -103,10 +103,10 @@ public final class MessageWriter {
                 ChatColor.GREEN + "Regeneration starting...";
     }
 
-    public static String portalFound(String portalName) {
-        String pname = portalName != null ? ChatColor.BLUE + "\"" + portalName + "\"" + ChatColor.GREEN + "" : "";
+    public static String portalFound() {
+        //String pname = portalName != null ? ChatColor.BLUE + "\"" + portalName + "\"" + ChatColor.GREEN + "" : "";
         return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
-                ChatColor.GREEN + "Restoring portal" + pname + "...";
+                ChatColor.GREEN + "Restoring portal...";
     }
 
     public static String portalError() {

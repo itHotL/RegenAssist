@@ -46,11 +46,6 @@ public class Main extends JavaPlugin {
         MVWorldManager worldManager = core.getMVWorldManager();
         MVCoreHandler mvCoreHandler = new MVCoreHandler(worldManager);
 
-        //if Multiverse-Portals is present, get an instance of the MVPortals API and pass it on to the MVPortalsHandler (might be null)
-        //MultiversePortals portals = (MultiversePortals) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Portals");
-        //MyPortalManager portalManager = (portals == null) ? null : portals.getPortalManager();
-        //MVPortalsHandler mvPortalsHandler = new MVPortalsHandler(config, portals, portalManager, this);
-
         //instantiate the MyPortalManager and RegenManager
         MyPortalManager myPortalManager = new MyPortalManager(config, this);
         RegenManager regenManager = new RegenManager(config, mvCoreHandler, myPortalManager, regenFile, regenQueue, this);

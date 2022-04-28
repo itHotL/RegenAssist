@@ -36,17 +36,31 @@ public class MyPortalManager {
         }
     }
 
+    public boolean hasMVPortal(String worldName) {
+        if (mvp != null) {
+            List<MVPortal> portals = mvp.getAllPortals();
+            for (MVPortal p : portals) {
+                if (p.getLocation().getMVWorld().getName().equalsIgnoreCase(worldName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public PortalResult fixPotentialPortal(String worldName) {
         if (mvp != null) {
             MVPortal portal = findMVPortal(worldName);
             if (portal != null) {
-                PortalResult printedPortal = relocateFoundPortal(worldName, portal);
+                PortalResult printedPortal = getNewPortalStructure(worldName);
                 if (printedPortal != null) {
-                    String mvportalLocation = printedPortal.portalInsideCorner1 + ":" + printedPortal.portalInsideCorner2;
+                    String mvportalLocation = printedPortal.getMVPortalStringLocation();
                     plugin.getLogger().info("Saving new portal location to the Multiverse-Portals config and reloading config");
                     mvp.setPortalLocation(portal, mvportalLocation, worldName);
                     mvp.savePortalsConfig();
                     mvp.reloadConfigs();
+                    printedPortal.setPortalName(portal.getName());
+                    return printedPortal;
                 }
             }
         }
@@ -63,24 +77,22 @@ public class MyPortalManager {
         return null;
     }
 
-    private PortalResult relocateFoundPortal(String worldName, MVPortal portal) {
-        if (mvp != null) {
-            World world = Bukkit.getServer().getWorld(worldName);
-            if (world != null) {
-                Location platformLocation = LocationFinder.findSafePortalLocation(world, config.useVanillaSpawn());
-                if (platformLocation == null) {
-                    plugin.getLogger().warning("Could not find a safe place for a portal structure!");
+    private PortalResult getNewPortalStructure(String worldName) {
+        World world = Bukkit.getServer().getWorld(worldName);
+        if (world != null) {
+            Location platformLocation = LocationFinder.findSafePortalLocation(world, config.useVanillaSpawn());
+            if (platformLocation == null) {
+                plugin.getLogger().warning("Could not find a safe place for a portal structure!");
+                return null;
+            }
+            else {
+                PortalResult printedPortal = portalPrinter.printPortal(world, platformLocation);
+                if (printedPortal == null) {
+                    plugin.getLogger().warning("Could not create a new portal structure!");
                     return null;
                 }
                 else {
-                    PortalResult printedPortal = portalPrinter.printPortal(world, platformLocation);
-                    if (printedPortal == null) {
-                        plugin.getLogger().warning("Could not create a new portal structure!");
-                        return null;
-                    }
-                    else {
-                        return printedPortal;
-                    }
+                    return printedPortal;
                 }
             }
         }

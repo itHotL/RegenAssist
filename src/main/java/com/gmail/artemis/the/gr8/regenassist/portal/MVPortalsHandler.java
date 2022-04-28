@@ -14,8 +14,6 @@ public class MVPortalsHandler {
     private final MultiversePortals mvpAPI;
     private final PortalManager portalManager;
 
-    private PortalRelocationResult portal;
-
     public MVPortalsHandler(MultiversePortals mvp, PortalManager pm) {
         mvpAPI = mvp;
         portalManager = pm;

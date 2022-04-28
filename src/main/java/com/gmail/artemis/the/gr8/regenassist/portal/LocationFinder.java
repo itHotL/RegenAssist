@@ -35,7 +35,7 @@ public final class LocationFinder {
     //checks what kind of world we are dealing with, and calls appropriate methods to find a safe y-level (returns 500 if none are found)
     private static int getSafeYLevel(World world, int chunkCornerX, int chunkCornerZ) {
         int platformY = 500;
-        int maxY = world.getMaxHeight();
+        int maxY = world.getLogicalHeight()-1;
         int minY = world.getMinHeight();
 
         ChunkSnapshot spawnChunk = world.getChunkAt(chunkCornerX, chunkCornerZ).getChunkSnapshot(true, false, false);
@@ -80,8 +80,9 @@ public final class LocationFinder {
         for (int y = worldMaxY; y > worldMinY; y--) {
             for (int x = platformX; x <= platformX+2; x++) {
                 for (int z= platformZ; z <= platformZ+3; z++) {
+                    System.out.println("x: " + x + ", y: " + y + ", z: " + z);
                     Material block = spawnChunk.getBlockType(x, y, z);
-                    if (block.isSolid() || block.equals(Material.WATER) || block.equals(Material.LAVA)) {
+                    if (!block.equals(Material.BEDROCK) && (block.isSolid() || block.equals(Material.WATER) || block.equals(Material.LAVA))) {
                         if (spawnChunk.getBlockType(x, y+1, z).isAir() &&
                                 spawnChunk.getBlockType(x, y+2, z).isAir() &&
                                 spawnChunk.getBlockType(x, y+3, z).isAir() &&
