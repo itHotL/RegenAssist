@@ -9,7 +9,10 @@ import com.gmail.artemis.the.gr8.regenassist.filehandlers.PlayerFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.listeners.JoinListener;
 import com.gmail.artemis.the.gr8.regenassist.listeners.QuitListener;
-import com.gmail.artemis.the.gr8.regenassist.utils.*;
+import com.gmail.artemis.the.gr8.regenassist.portal.MVPortalsHandler;
+import com.gmail.artemis.the.gr8.regenassist.portal.MyPortalManager;
+import com.gmail.artemis.the.gr8.regenassist.regen.MVCoreHandler;
+import com.gmail.artemis.the.gr8.regenassist.regen.RegenQueue;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import com.onarandombox.MultiversePortals.MultiversePortals;
@@ -44,14 +47,18 @@ public class Main extends JavaPlugin {
         MVCoreHandler mvCoreHandler = new MVCoreHandler(worldManager);
 
         //if Multiverse-Portals is present, get an instance of the MVPortals API and pass it on to the MVPortalsHandler (might be null)
-        MultiversePortals portals = (MultiversePortals) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Portals");
-        PortalManager portalManager = (portals == null) ? null : portals.getPortalManager();
-        MVPortalsHandler mvPortalsHandler = new MVPortalsHandler(config, portals, portalManager, this);
+        //MultiversePortals portals = (MultiversePortals) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Portals");
+        //MyPortalManager portalManager = (portals == null) ? null : portals.getPortalManager();
+        //MVPortalsHandler mvPortalsHandler = new MVPortalsHandler(config, portals, portalManager, this);
+
+        //instantiate the MyPortalManager and RegenManager
+        MyPortalManager myPortalManager = new MyPortalManager(config, this);
+        RegenManager regenManager = new RegenManager(config, mvCoreHandler, myPortalManager, regenFile, regenQueue, this);
 
         //set command executors and pass the relevant instances on
-        this.getCommand("regen").setExecutor(new RegenCommand(config, mvCoreHandler, regenFile, regenQueue));
+        this.getCommand("regen").setExecutor(new RegenCommand(config, mvCoreHandler, regenManager, regenQueue));
         this.getCommand("regen").setTabCompleter(new TabCompleter(config));
-        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(config, mvCoreHandler, mvPortalsHandler, regenFile, regenQueue, this));
+        this.getCommand("regenconfirm").setExecutor(new ConfirmCommand(regenManager, regenQueue));
         this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));
 
         //register the Listeners

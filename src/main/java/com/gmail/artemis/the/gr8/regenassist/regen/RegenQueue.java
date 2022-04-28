@@ -1,4 +1,4 @@
-package com.gmail.artemis.the.gr8.regenassist.utils;
+package com.gmail.artemis.the.gr8.regenassist.regen;
 
 import com.gmail.artemis.the.gr8.regenassist.Main;
 import org.bukkit.Bukkit;

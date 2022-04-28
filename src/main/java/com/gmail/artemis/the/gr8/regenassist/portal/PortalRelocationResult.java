@@ -1,23 +1,22 @@
-package com.gmail.artemis.the.gr8.regenassist.utils;
+package com.gmail.artemis.the.gr8.regenassist.portal;
 
 import com.onarandombox.MultiversePortals.MVPortal;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-public class PortalCandidate {
+public class PortalRelocationResult {
 
     private final MVPortal portal;
     private final World world;
     private String location;
     private Location spawnLocation;
 
-    public PortalCandidate(World w, MVPortal p) {
+    public PortalRelocationResult(World w, MVPortal p) {
         world = w;
         portal = p;
-        spawnLocation = p.getLocation().getMVWorld().getSpawnLocation();
     }
 
-    public void submitNewLocation(String loc, int x, int y, int z) {
+    public void setNewLocation(String loc, int x, int y, int z) {
         location = loc;
         submitNewSpawn(x, y, z);
     }
@@ -30,12 +29,16 @@ public class PortalCandidate {
 
     public boolean saveSubmittedLocation(String worldName) {
         if (location != null) {
-            return portal.setPortalLocation(location, worldName) && world.setSpawnLocation(spawnLocation);
+            return portal.setPortalLocation(location, worldName) && saveSubmittedSpawn();
         }
 
         else {
             return false;
         }
+    }
+
+    private boolean saveSubmittedSpawn() {
+        return (spawnLocation != null && world.setSpawnLocation(spawnLocation));
     }
 
     public Location getSpawnLocation() {

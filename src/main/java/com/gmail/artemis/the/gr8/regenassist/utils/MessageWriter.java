@@ -106,7 +106,7 @@ public final class MessageWriter {
     public static String portalFound(String portalName) {
         String pname = portalName != null ? ChatColor.BLUE + "\"" + portalName + "\"" + ChatColor.GREEN + "" : "";
         return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
-                ChatColor.GREEN + "Restoring portal " + pname + "...";
+                ChatColor.GREEN + "Restoring portal" + pname + "...";
     }
 
     public static String portalError() {
@@ -124,11 +124,11 @@ public final class MessageWriter {
 
     public static String unknownRegenStatus(String worldName) {
         return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
-                ChatColor.RED + "Unable to confirm whether " + worldName + " has been regenerated.";
+                ChatColor.RED + "Unable to confirm whether " + ChatColor.AQUA + "\"" + worldName + "\"" + ChatColor.RED + " has been regenerated.";
     }
 
-    public static String unknownError(String worldName) {
+    public static String unknownError() {
         return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
-                ChatColor.RED + "Something went wrong, and the " + worldName + " could not be regenerated.";
+                ChatColor.RED + "An unknown error occurred, and the regeneration could not go through.";
     }
 }
