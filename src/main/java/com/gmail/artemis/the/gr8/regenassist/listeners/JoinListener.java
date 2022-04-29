@@ -4,7 +4,7 @@ import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.PlayerFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
-import com.gmail.artemis.the.gr8.regenassist.utils.MVCoreHandler;
+import com.gmail.artemis.the.gr8.regenassist.regen.MVCoreHandler;
 import com.gmail.artemis.the.gr8.regenassist.utils.MessageWriter;
 import com.gmail.artemis.the.gr8.regenassist.utils.TimeHandler;
 import org.bukkit.Bukkit;

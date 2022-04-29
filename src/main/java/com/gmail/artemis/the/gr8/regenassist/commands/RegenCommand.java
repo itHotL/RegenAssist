@@ -1,7 +1,10 @@
 package com.gmail.artemis.the.gr8.regenassist.commands;
 
+import com.gmail.artemis.the.gr8.regenassist.RegenManager;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
+import com.gmail.artemis.the.gr8.regenassist.regen.MVCoreHandler;
+import com.gmail.artemis.the.gr8.regenassist.regen.RegenQueue;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,14 +20,14 @@ public class RegenCommand implements CommandExecutor {
 
     private final ConfigHandler config;
     private final MVCoreHandler mv;
-    private final RegenFileHandler regenFile;
+    private final RegenManager regenManager;
     private final RegenQueue regenQueue;
 
-    public RegenCommand (ConfigHandler c, MVCoreHandler m, RegenFileHandler r, RegenQueue q) {
+    public RegenCommand (ConfigHandler c, MVCoreHandler m, RegenManager r, RegenQueue q) {
 
         config = c;
         mv = m;
-        regenFile = r;
+        regenManager = r;
         regenQueue = q;
     }
 
@@ -88,14 +91,14 @@ public class RegenCommand implements CommandExecutor {
 
                     //give confirm prompt to player
                     if (sender instanceof Player) {
-                        String confirmCmd = "tellraw "+sender.getName()+ MessageWriter.confirmCommand(args[0], getUniqueRegenCmd(uniqueCode, args[1], gamerules), getTimeSinceLastRegen(args[0]));
+                        String confirmCmd = "tellraw "+sender.getName()+ MessageWriter.confirmCommand(args[0], getUniqueRegenCmd(uniqueCode, args[1], gamerules), regenManager.getTimeSinceLastRegen(args[0]));
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), confirmCmd);
                         return true;
                     }
 
                     //give confirm prompt in console
                     else if (sender instanceof ConsoleCommandSender) {
-                        sender.sendMessage(MessageWriter.confirmCommandConsole(args[0], getTimeSinceLastRegen(args[0])));
+                        sender.sendMessage(MessageWriter.confirmCommandConsole(args[0], regenManager.getTimeSinceLastRegen(args[0])));
                         return true;
                     }
 
@@ -110,17 +113,5 @@ public class RegenCommand implements CommandExecutor {
 
     private String getUniqueRegenCmd(UUID uuid, String seedOption, String gamerules) {
         return "/regenconfirm "+uuid+" "+seedOption+" "+gamerules;
-    }
-
-    //calculate the time since this world has last been reset
-    private String getTimeSinceLastRegen(String worldName) {
-        String timestamp = regenFile.getLastRegenTime(worldName);
-        if (!timestamp.equalsIgnoreCase("")) {
-            return TimeHandler.getStringTimeSinceLastRegen(timestamp);
-        }
-
-        else {
-            return timestamp;
-        }
     }
 }

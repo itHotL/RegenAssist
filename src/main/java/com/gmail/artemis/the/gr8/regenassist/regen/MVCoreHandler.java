@@ -1,4 +1,4 @@
-package com.gmail.artemis.the.gr8.regenassist.utils;
+package com.gmail.artemis.the.gr8.regenassist.regen;
 
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import org.bukkit.Location;
