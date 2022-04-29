@@ -7,11 +7,9 @@ import org.bukkit.*;
 public class PortalPrinter {
 
     private final ConfigHandler config;
-    private final Main plugin;
 
-    public PortalPrinter(ConfigHandler c, Main p) {
+    public PortalPrinter(ConfigHandler c) {
         config = c;
-        plugin = p;
     }
 
     public PortalResult printPortal(World world, Location platformLocation) {
@@ -31,9 +29,14 @@ public class PortalPrinter {
         int frameY = platformY+1;
         printPortalFrame(world, frameX, frameY, frameZ);
 
+        int airX = platformX;
+        int airY = platformY+1;
+        int airZ = platformZ+1;
+        printAirPocket(world, airX, airY, airZ);
+
         Location portalCorner1 = new Location(world, portalX, portalY, portalZ);
         Location portalCorner2 = new Location(world, portalX, portalY+2, portalZ+1);
-        Location spawnLocation = new Location(world, platformX+1, platformY+1, platformZ+2.5);
+        Location spawnLocation = new Location(world, platformX+1.5, platformY+1, platformZ+3, 90.0F, 0.0F);
         return new PortalResult(portalCorner1, portalCorner2, spawnLocation);
     }
 
@@ -96,6 +99,17 @@ public class PortalPrinter {
         world.setType(portalX, portalY, portalZ+1, block);
         world.setType(portalX, portalY+1, portalZ+1, block);
         world.setType(portalX, portalY+2, portalZ+1, block);
+    }
+
+    //makes sure there's an air pocket for the player to spawn in
+    private void printAirPocket(World world, int airX, int airY, int airZ) {
+        for (int x = airX; x <= 2; x++) {
+            for (int z = airZ; z <= 3; z++) {
+                for (int y = airY; y <=4; y++) {
+                    world.setType(airX, airY, airZ, Material.AIR);
+                }
+            }
+        }
     }
 }
 
