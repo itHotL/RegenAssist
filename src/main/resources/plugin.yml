@@ -1,6 +1,6 @@
 main: com.gmail.artemis.the.gr8.regenassist.Main
 name: RegenAssist
-version: 1.0
+version: 2.0
 api-version: 1.18
 description: executes the Multiverse regen command for a specific world only
 author: Artemis_the_gr8
