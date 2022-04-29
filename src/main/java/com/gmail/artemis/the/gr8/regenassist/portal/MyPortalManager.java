@@ -27,7 +27,7 @@ public class MyPortalManager {
         if (api != null) {
             PortalManager portalManager = api.getPortalManager();
             mvp = new MVPortalsHandler(api, portalManager);
-            portalPrinter = new PortalPrinter(c, p);
+            portalPrinter = new PortalPrinter(c);
         }
 
         else {
