@@ -17,8 +17,7 @@ public class ConfirmCommand implements CommandExecutor {
     private final RegenManager regenManager;
     private final RegenQueue regenQueue;
 
-    public ConfirmCommand (RegenManager rm, RegenQueue q) {
-
+    public ConfirmCommand(RegenManager rm, RegenQueue q) {
         regenManager = rm;
         regenQueue = q;
     }
@@ -49,6 +48,7 @@ public class ConfirmCommand implements CommandExecutor {
                 return regenManager.performRegen(sender, args);
             }
         }
+
         return false;
     }
 }

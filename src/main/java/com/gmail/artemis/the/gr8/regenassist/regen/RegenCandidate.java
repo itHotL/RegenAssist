@@ -6,7 +6,6 @@ public class RegenCandidate {
     private final String seedOption;
     private final String resetGameRules;
 
-
     public RegenCandidate(String name, String seed, String gamerules) {
         worldName = name;
         seedOption = seed;

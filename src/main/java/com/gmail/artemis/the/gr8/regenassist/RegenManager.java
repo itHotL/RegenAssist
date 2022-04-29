@@ -104,6 +104,9 @@ public class RegenManager {
                                 portalName = portal.getPortalName();
                                 mv.setSpawn(worldName, portal.getSpawnLocation());
                             }
+                            else {
+                                sender.sendMessage(MessageWriter.portalError());
+                            }
                         }
                     }
                     sender.sendMessage(MessageWriter.doneRegenerating(worldName, fixedPortal, portalName));

@@ -2,7 +2,6 @@ package com.gmail.artemis.the.gr8.regenassist.commands;
 
 import com.gmail.artemis.the.gr8.regenassist.RegenManager;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
-import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.regen.MVCoreHandler;
 import com.gmail.artemis.the.gr8.regenassist.regen.RegenQueue;
 import com.gmail.artemis.the.gr8.regenassist.utils.*;
@@ -23,8 +22,7 @@ public class RegenCommand implements CommandExecutor {
     private final RegenManager regenManager;
     private final RegenQueue regenQueue;
 
-    public RegenCommand (ConfigHandler c, MVCoreHandler m, RegenManager r, RegenQueue q) {
-
+    public RegenCommand(ConfigHandler c, MVCoreHandler m, RegenManager r, RegenQueue q) {
         config = c;
         mv = m;
         regenManager = r;
@@ -34,7 +32,7 @@ public class RegenCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        //check if a worldname is included
+        //check if worldName is included
         if (args.length == 0) {
             sender.sendMessage(MessageWriter.missingName());
             return false;
@@ -53,9 +51,7 @@ public class RegenCommand implements CommandExecutor {
         }
 
         else {
-
             //check if to-be-regenerated world is not the main world
-            //get name of the main world from config, or assume 'world' if path is empty
             String mainWorld = (config.getMainWorldName()==null) ? "world" : config.getMainWorldName();
             if (args[0].equalsIgnoreCase(mainWorld)) {
                 sender.sendMessage(MessageWriter.mainWorldWarning());
@@ -69,7 +65,6 @@ public class RegenCommand implements CommandExecutor {
             }
 
             else {
-
                 if (!mv.isMVWorld(args[0])) {
                     sender.sendMessage(MessageWriter.unknownWorld());
                     return true;
@@ -109,7 +104,6 @@ public class RegenCommand implements CommandExecutor {
             }
         }
     }
-
 
     private String getUniqueRegenCmd(UUID uuid, String seedOption, String gamerules) {
         return "/regenconfirm "+uuid+" "+seedOption+" "+gamerules;

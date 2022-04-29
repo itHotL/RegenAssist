@@ -15,14 +15,6 @@ public class PortalResult {
         spawnLocation = playerSpawn;
     }
 
-    public Location getPortalInsideCorner1() {
-        return portalInsideCorner1;
-    }
-
-    public Location getPortalInsideCorner2() {
-        return portalInsideCorner2;
-    }
-
     public String getMVPortalStringLocation() {
         double x1 = portalInsideCorner1.getX();
         double y1 = portalInsideCorner1.getY();

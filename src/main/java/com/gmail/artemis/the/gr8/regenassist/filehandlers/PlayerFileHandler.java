@@ -57,7 +57,7 @@ public class PlayerFileHandler {
         }
     }
 
-    //store dates in the regen-data file (param: playername & worldname)
+    //store dates in the regen-data file (param: playerName & worldName)
     public void writeToFile(String playerName, String worldName) {
         try {
             playerConf.set(playerName, worldName);
@@ -79,6 +79,7 @@ public class PlayerFileHandler {
         return (playerConf.contains(playerName)) ? playerConf.getString(playerName) : "";
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createFile() {
         playerFile.getParentFile().mkdirs();
         try {

@@ -10,7 +10,7 @@ import java.util.UUID;
 public class RegenQueue {
 
     //stores a unique code for worlds that are queued to be regenerated
-    //key = UUID, value = object containing worldname, seed-option and gamerules-option
+    //key = UUID, value = object containing worldName, seed-option and gamerules-option
     private final HashMap<UUID, RegenCandidate> regenQueue = new HashMap<>();
     private final Main plugin;
 

@@ -9,12 +9,12 @@ public class QuitListener implements Listener {
 
     private final PlayerFileHandler playerFile;
 
-    public QuitListener (PlayerFileHandler p) {
+    public QuitListener(PlayerFileHandler p) {
         playerFile = p;
     }
 
     @EventHandler
-    public void OnPlayerQuit (PlayerQuitEvent quitEvent) {
+    public void OnPlayerQuit(PlayerQuitEvent quitEvent) {
         String playerName = quitEvent.getPlayer().getName();
         String worldName = quitEvent.getPlayer().getWorld().getName();
         playerFile.writeToFile(playerName, worldName);

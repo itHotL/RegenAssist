@@ -1,6 +1,5 @@
 package com.gmail.artemis.the.gr8.regenassist.portal;
 
-import com.gmail.artemis.the.gr8.regenassist.Main;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import org.bukkit.*;
 
@@ -29,10 +28,9 @@ public class PortalPrinter {
         int frameY = platformY+1;
         printPortalFrame(world, frameX, frameY, frameZ);
 
-        int airX = platformX;
         int airY = platformY+1;
         int airZ = platformZ+1;
-        printAirPocket(world, airX, airY, airZ);
+        printAirPocket(world, platformX, airY, airZ);
 
         Location portalCorner1 = new Location(world, portalX, portalY, portalZ);
         Location portalCorner2 = new Location(world, portalX, portalY+2, portalZ+1);
@@ -50,14 +48,7 @@ public class PortalPrinter {
 
         for (int x = platformX; x <= platformX+6; x++) {
             for (int z = platformZ; z <= platformZ+5; z++) {
-                for (int y = platformY; y <= platformY+3; y++) {
-                    if (y == platformY) {
-                        world.setType(x, y, z, block);
-                    }
-                    else {
-                        world.setType(x, y, z, Material.AIR);
-                    }
-                }
+                        world.setType(x, platformY, z, block);
             }
         }
     }
@@ -103,9 +94,9 @@ public class PortalPrinter {
 
     //makes sure there's an air pocket for the player to spawn in
     private void printAirPocket(World world, int airX, int airY, int airZ) {
-        for (int x = airX; x <= 2; x++) {
-            for (int z = airZ; z <= 3; z++) {
-                for (int y = airY; y <=4; y++) {
+        for (int x = airX; x <= airX+2; x++) {
+            for (int z = airZ; z <= airZ+3; z++) {
+                for (int y = airY; y <=airY+4; y++) {
                     world.setType(airX, airY, airZ, Material.AIR);
                 }
             }

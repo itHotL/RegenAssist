@@ -22,7 +22,6 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         //show the names of worlds that can be regenerated
         List<String> finalList = new ArrayList<>();
         if (label.equalsIgnoreCase("regen")) {
-
             if (args.length == 1) {
                 for (String world : config.getWorldList()) {
                     if (world.startsWith(args[0])) {

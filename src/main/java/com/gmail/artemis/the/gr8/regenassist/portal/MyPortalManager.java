@@ -56,11 +56,11 @@ public class MyPortalManager {
                 if (printedPortal != null) {
                     String mvportalLocation = printedPortal.getMVPortalStringLocation();
                     plugin.getLogger().info("Saving new portal location to the Multiverse-Portals config and reloading config");
-                    mvp.setPortalLocation(portal, mvportalLocation, worldName);
-                    mvp.savePortalsConfig();
-                    mvp.reloadConfigs();
-                    printedPortal.setPortalName(portal.getName());
-                    return printedPortal;
+                    if (mvp.setPortalLocation(portal, mvportalLocation, worldName) && mvp.savePortalsConfig()) {
+                        mvp.reloadConfigs();
+                        printedPortal.setPortalName(portal.getName());
+                        return printedPortal;
+                    }
                 }
             }
         }

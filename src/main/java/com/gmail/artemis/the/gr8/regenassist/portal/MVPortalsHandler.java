@@ -1,11 +1,8 @@
 package com.gmail.artemis.the.gr8.regenassist.portal;
 
-import com.gmail.artemis.the.gr8.regenassist.Main;
-import com.gmail.artemis.the.gr8.regenassist.filehandlers.ConfigHandler;
 import com.onarandombox.MultiversePortals.MVPortal;
 import com.onarandombox.MultiversePortals.MultiversePortals;
 import com.onarandombox.MultiversePortals.utils.PortalManager;
-import org.bukkit.*;
 
 import java.util.List;
 
@@ -21,10 +18,6 @@ public class MVPortalsHandler {
 
     public List<MVPortal> getAllPortals() {
         return portalManager.getAllPortals();
-    }
-
-    public MVPortal getPortal(String portalName) {
-        return portalManager.getPortal(portalName);
     }
 
     public boolean setPortalLocation(MVPortal portal, String location, String worldName) {

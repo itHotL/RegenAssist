@@ -2,7 +2,6 @@ package com.gmail.artemis.the.gr8.regenassist.utils;
 
 import org.bukkit.ChatColor;
 
-
 public final class MessageWriter {
 
     private MessageWriter() {
@@ -10,7 +9,6 @@ public final class MessageWriter {
 
     public static String confirmCommand(String worldName, String uniqueRegenCmd, String timeSinceRegen) {
 
-        String msg = "{\"text\":\"You are about to regenerate world \",\"color\":\"white\"},{\"text\":\"\\\""+worldName+"\\\"\",\"color\":\"aqua\"},{\"text\":\". This world was last regenerated \",\"color\":\"white\"},{\"text\":\"[time]\",\"color\":\"gold\"},{\"text\":\" ago. To continue, click \",\"color\":\"white\"},{\"text\":\"[confirm]\",\"color\":\"dark_purple\"}";
         String time = (timeSinceRegen.equalsIgnoreCase("")) ? "" :
                 "{\"text\":\". This world was last regenerated \",\"color\":\"white\"}," +
                 "{\"text\":\"["+timeSinceRegen+"]\",\"color\":\"gold\"}," +

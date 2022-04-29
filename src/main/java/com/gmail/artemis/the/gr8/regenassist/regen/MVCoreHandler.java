@@ -9,7 +9,6 @@ public class MVCoreHandler {
 
     private final MVWorldManager worldManager;
 
-
     public MVCoreHandler(MVWorldManager wm) {
 
         worldManager = wm;

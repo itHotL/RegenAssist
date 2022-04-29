@@ -9,25 +9,20 @@ import com.gmail.artemis.the.gr8.regenassist.filehandlers.PlayerFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.filehandlers.RegenFileHandler;
 import com.gmail.artemis.the.gr8.regenassist.listeners.JoinListener;
 import com.gmail.artemis.the.gr8.regenassist.listeners.QuitListener;
-import com.gmail.artemis.the.gr8.regenassist.portal.MVPortalsHandler;
 import com.gmail.artemis.the.gr8.regenassist.portal.MyPortalManager;
 import com.gmail.artemis.the.gr8.regenassist.regen.MVCoreHandler;
 import com.gmail.artemis.the.gr8.regenassist.regen.RegenQueue;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import com.onarandombox.MultiversePortals.MultiversePortals;
-import com.onarandombox.MultiversePortals.utils.PortalManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
 
-
 public class Main extends JavaPlugin {
 
     private PlayerFileHandler playerFile;
-
 
     @Override
     public void onEnable() {
@@ -38,7 +33,7 @@ public class Main extends JavaPlugin {
         RegenQueue regenQueue = new RegenQueue(this);
 
         //get an instance of the MVWorldManager from the Multiverse API and pass it on to the MVCoreHandler
-        MultiverseCore core = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
+        MultiverseCore core = (MultiverseCore)Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
         if (core == null) {
             getLogger().severe("Multiverse-Core not found, RegenAssist is nothing without it");
             return;
@@ -57,7 +52,7 @@ public class Main extends JavaPlugin {
         this.getCommand("regenreload").setExecutor(new ReloadCommand(config, playerFile, regenFile));
 
         //register the Listeners
-        Bukkit.getPluginManager().registerEvents(new JoinListener(config, mvCoreHandler, playerFile, regenFile, this), this);
+        Bukkit.getPluginManager().registerEvents(new JoinListener(config, playerFile, regenFile, this), this);
         Bukkit.getPluginManager().registerEvents(new QuitListener(playerFile), this);
 
         getLogger().info("Enabled RegenAssist");

@@ -57,7 +57,7 @@ public class RegenFileHandler {
         }
     }
 
-    //store dates in the regen-data file (param: worldname, date to store)
+    //store dates in the regen-data file (param: worldName, date to store)
     public void writeToFile(String worldName, Instant date) {
         try {
             regenConf.set(worldName, date.toString());
@@ -80,6 +80,7 @@ public class RegenFileHandler {
     }
 
     //create a file to write world- and player-data to if none exists yet
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void createFile() {
         regenFile.getParentFile().mkdirs();
         try {
