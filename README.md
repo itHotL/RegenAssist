@@ -41,4 +41,5 @@ I am new to programming, and this is the first official plugin that I've made. I
 
 ## Licence
 RegenAssist is licenced under the MIT licence. Please see [LICENCE](LICENSE) for more information.
+
 ![Overworld_Portal](src/main/resources/screenshots/Overworld_Portal.png)
