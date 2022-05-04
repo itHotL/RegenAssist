@@ -32,8 +32,14 @@ public class RegenCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
+        //check if there are worlds listed in the config
+        if (config.getWorldList().isEmpty()) {
+            sender.sendMessage(MessageWriter.emptyWorldList());
+            return true;
+        }
+
         //check if worldName is included
-        if (args.length == 0) {
+        else if (args.length == 0) {
             sender.sendMessage(MessageWriter.missingName());
             return false;
         }

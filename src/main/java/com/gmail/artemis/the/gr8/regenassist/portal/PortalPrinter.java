@@ -97,7 +97,7 @@ public class PortalPrinter {
         for (int x = airX; x <= airX+2; x++) {
             for (int z = airZ; z <= airZ+3; z++) {
                 for (int y = airY; y <=airY+4; y++) {
-                    world.setType(airX, airY, airZ, Material.AIR);
+                    world.setType(x, y, z, Material.AIR);
                 }
             }
         }

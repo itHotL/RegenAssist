@@ -56,6 +56,11 @@ public final class MessageWriter {
                 ChatColor.RED + "Something went wrong and the files could not be reloaded.";
     }
 
+    public static String emptyWorldList() {
+        return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
+                ChatColor.RESET + "No available worlds for regeneration found! Please add the world(s) you want to be able to regenerate to the config and do /regenreload";
+    }
+
     public static String alreadyRegenerating() {
         return  ChatColor.GRAY + "[" + ChatColor.GOLD + "RegenAssist" + ChatColor.GRAY + "] " +
                 ChatColor.GOLD + "Someone else is already in the process of regenerating this world, please check again later!";
