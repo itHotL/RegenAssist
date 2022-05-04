@@ -18,7 +18,11 @@ Before using RegenAssist, you'll need to do the following:
   - Worldname 
   - What seed to use for the regeneration (same seed/random seed/a seed you supply)
   - An optional flag to reset the world's gamerules (they will be kept the same on default)
+  
+![Tab_Complete](src/main/resources/screenshots/Tab_Complete.png)    ![Tab_Complete_2](src/main/resources/screenshots/Tab_Complete_2.png)
+
 * See when a world was last regenerated before continuing with the regen
+
 * Support regenerating from console as well as in-game
 * Automatically teleport players to spawn when their login location is in a world that has been regenerated since they logged out (to prevent deaths due to terrain changes around the player)
 * If there is a Multiverse portal in your world, RegenAssist can:
