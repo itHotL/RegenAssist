@@ -35,10 +35,10 @@ Before using RegenAssist, you'll need to do the following:
   - Enable/disable Multiverse portal restoring 
   - Location choice: either [0, 0] or vanilla spawn
   - Block choice: the platform, frame and inside blocks for the portal can be changed per world type (so you can have a different default portal-look in a normal world, Nether or End)
-![Overworld_Portal](src/main/resources/screenshots/Overworld_Portal.png)
 
 ## Author Info
 I am new to programming, and this is the first official plugin that I've made. I greatly enjoyed making it, and if you have any questions, remarks, or suggestions, please let me know! You can find me on [GitHub](https://github.com/Artemis-the-gr8) or reach me by email: artemis.the.gr8@gmail.com
 
 ## Licence
 RegenAssist is licenced under the MIT licence. Please see [LICENCE](LICENSE) for more information.
+![Overworld_Portal](src/main/resources/screenshots/Overworld_Portal.png)
