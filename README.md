@@ -1,9 +1,14 @@
 # RegenAssist
 
 ## About
-RegenAssist is an add-on to [Multiverse](https://dev.bukkit.org/projects/multiverse-core) that makes it possible to regenerate Multiverse worlds easily with one command and automatically restore any Multiverse portals in the process. This is particularly useful for world(s) you would like to reset regularly, such as resourceworlds. 
+RegenAssist is an add-on to [Multiverse](https://dev.bukkit.org/projects/multiverse-core) that makes it possible to 
+regenerate Multiverse worlds easily and automatically restore any Multiverse portals in the process. 
+This is particularly useful for world(s) you would like to reset regularly, such as resourceworlds. 
 
-Because RegenAssist lets you configure which world(s) should be on the candidate-list for regeneration, you can allow anyone with the regenassist.regen permission to regenerate _only_ the world(s) on the list. To use the regen command, you don't need to know a lot about Multiverse either, because RegenAssist's tab-complete suggestions will walk you through the process.
+Because RegenAssist lets you configure which world(s) should be on the candidate-list for regeneration, 
+you can allow anyone with the regenassist.regen permission to regenerate _only_ the world(s) on the list. 
+To use the regen command, you don't need to know a lot about Multiverse either, because 
+RegenAssist's tab-complete suggestions will walk you through the process.
 
 ## First Time Use
 Before using RegenAssist, you'll need to do the following:
@@ -15,16 +20,17 @@ Before using RegenAssist, you'll need to do the following:
 
 ## Features
 * Use a central regen command that shows tab-complete suggestions for:
-  - Worldname 
-  - What seed to use for the regeneration (same seed/random seed/a seed you supply)
+  - The **worlds** you have listed in the config 
+  - What **seed** to use for the regeneration (same seed/random seed/a seed you supply)
   - An optional flag to reset the world's gamerules (they will be kept the same on default)
-  
-![Tab_Complete](src/main/resources/screenshots/Tab_Complete.png)    ![Tab_Complete_2](src/main/resources/screenshots/Tab_Complete_2.png)
+![Tab_Complete_2](src/main/resources/screenshots/Tab_Complete_2.png)
 
 * See when a world was last regenerated before continuing with the regen
+![Regen_Command](src/main/resources/screenshots/Regen_Command.png)
 
 * Support regenerating from console as well as in-game
-* Automatically teleport players to spawn when their login location is in a world that has been regenerated since they logged out (to prevent deaths due to terrain changes around the player)
+* Automatically teleport players to spawn when their login location is in a world that has been regenerated since they logged out 
+(to prevent deaths due to terrain changes around the player)
 * If there is a Multiverse portal in your world, RegenAssist can:
   - Find a safe location to create a new portal structure (should work in all world types, including the Nether!)
   - Link the existing Multiverse portal to this structure
@@ -38,10 +44,13 @@ Before using RegenAssist, you'll need to do the following:
 **Portal:**
   - Enable/disable Multiverse portal restoring 
   - Location choice: either [0, 0] or vanilla spawn
-  - Block choice: the platform, frame and inside blocks for the portal can be changed per world type (so you can have a different default portal-look in a normal world, Nether or End)
+  - Block choice: the platform, frame and inside blocks for the portal can be changed per world type 
+  (so you can have a different default portal-look in a normal world, Nether or End)
 
 ## Author Info
-I am new to programming, and this is the first official plugin that I've made. I greatly enjoyed making it, and if you have any questions, remarks, or suggestions, please let me know! You can find me on [GitHub](https://github.com/Artemis-the-gr8) or reach me by email: artemis.the.gr8@gmail.com
+I am new to programming, and this is the first official plugin that I've made. I greatly enjoyed making it, 
+and if you have any questions, remarks, or suggestions, please let me know! 
+You can find me on [GitHub](https://github.com/Artemis-the-gr8) or reach me by email: artemis.the.gr8@gmail.com
 
 ## Licence
 RegenAssist is licenced under the MIT licence. Please see [LICENCE](LICENSE) for more information.
