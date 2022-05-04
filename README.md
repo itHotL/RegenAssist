@@ -40,4 +40,4 @@ Before using RegenAssist, you'll need to do the following:
 I am new to programming, and this is the first official plugin that I've made. I greatly enjoyed making it, and if you have any questions, remarks, or suggestions, please let me know! You can find me on [GitHub](https://github.com/Artemis-the-gr8) or reach me by email: artemis.the.gr8@gmail.com
 
 ## Licence
-RegenAssist is licenced under the MIT licence. Please see [LICENCE.md](LICENSE.md) for more information.
+RegenAssist is licenced under the MIT licence. Please see [LICENCE.md](LICENSE) for more information.
