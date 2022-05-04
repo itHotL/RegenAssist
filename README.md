@@ -1,9 +1,9 @@
 # RegenAssist
 
 ## About
-RegenAssist is an add-on to [Multiverse](https://dev.bukkit.org/projects/multiverse-core) that enables you to easily regenerate Multiverse worlds with one command and automatically restore Multiverse portals in the process. This is particularly useful for world(s) you would like to reset regularly, such as resourceworlds. 
+RegenAssist is an add-on to [Multiverse](https://dev.bukkit.org/projects/multiverse-core) that makes it possible to regenerate Multiverse worlds easily with one command and automatically restore any Multiverse portals in the process. This is particularly useful for world(s) you would like to reset regularly, such as resourceworlds. 
 
-Because RegenAssist lets you configure which world(s) should be on the candidate-list for regeneration, you can give moderators permission to regenerate _only_ those world(s), without giving them more Multiverse permissions.
+Because RegenAssist lets you configure which world(s) should be on the candidate-list for regeneration, you can allow anyone with the regenassist.regen permission to regenerate _only_ the world(s) on the list. To use the regen command, you don't need to know a lot about Multiverse either, because RegenAssist's tab-complete suggestions will walk you through the process.
 
 ## First Time Use
 Before using RegenAssist, you'll need to do the following:
