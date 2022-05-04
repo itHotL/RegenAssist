@@ -19,10 +19,13 @@ commands:
     permission-message: §cYou do not have permission to execute this command!
   regenreload:
     description: reloads the config and datafiles
-    permission: regenassist.regen
+    permission: regenassist.reload
     permission-message: §cYou do not have permission to execute this command!
 permissions:
+  regenassist.reload:
+    description: Allows all RegenAssist actions, including reloading the config
+    default: op
   regenassist.regen:
-    description: Allows usage of all regen commands
+    description: Allows usage of the regen and confirm command
     default: op
 
